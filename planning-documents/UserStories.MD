@@ -29,6 +29,8 @@ recommendations based on their performance, discover relevant GitHub projects, a
 
 ***
 
+
+
 ## MVP
 
 - Authentication
@@ -42,6 +44,11 @@ recommendations based on their performance, discover relevant GitHub projects, a
 - GitHub API
 - Relevant project recommendations
 - Production deployment
+
+NOTES TO CONSIDER: 
+- Don't send code submissions to back end 
+- Check for existing libraries that run in client-side (consider JS over Java)
+--> SnapCode, Eclipse Che, 
 
 ## Post-MVP
 

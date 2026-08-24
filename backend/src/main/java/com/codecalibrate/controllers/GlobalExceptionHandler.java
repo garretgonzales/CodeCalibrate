@@ -1,5 +1,6 @@
 package com.codecalibrate.controllers;
 
+import com.codecalibrate.domain.InvalidCredentialsException;
 import com.codecalibrate.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,4 +31,11 @@ public class GlobalExceptionHandler {
 
         return new ApiErrorResponse("Request validation failed.", errors);
     }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ApiErrorResponse handleInvalidCredentialsException(InvalidCredentialsException exception) {
+        return new ApiErrorResponse(exception.getMessage(), Map.of());
+    }
+
 }

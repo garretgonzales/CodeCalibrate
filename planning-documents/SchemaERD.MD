@@ -1,6 +1,6 @@
 ## ERD
 
-![ERD](assets/CodeForge-ERD.png)
+![ERD](assets/CC-ERD.png)
 
 ---
 

@@ -1,0 +1,9 @@
+POST http://localhost:8080/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "codelearner",
+  "email": "codelearner@example.com",
+  "password": "password123",
+  "confirmPassword": "password123"
+}

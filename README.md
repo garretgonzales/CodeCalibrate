@@ -1,4 +1,4 @@
-# <img src="assests/icons8-code-80.png" width="40" alt="Code Calibrate logo"> Code Calibrate
+# 🖥️ Code Calibrate
 ### _Practice what you need. Build toward mastery._
 
 Code Calibrate is a full-stack coding practice and learning platform inspired by language-learning applications such as Duolingo. Users can create accounts, follow structured learning paths, practice individual programming skills, and track their progress as they build mastery.

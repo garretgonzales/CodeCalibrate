@@ -59,3 +59,5 @@ recommendations based on their performance, discover relevant GitHub projects, a
 - AI-generated exercises
 - User-created exercises
 - GitHub account integration
+
+***

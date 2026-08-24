@@ -1,96 +1,106 @@
-CREATE TABLE users (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+create table users
+(
+    id         int unsigned AUTO_INCREMENT primary key,
+    username   varchar(50)  NOT null unique,
+    email      varchar(255) NOT null unique,
+    password   varchar(255) NOT null,
+    created_at TIMESTAMP    NOT null DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE skills (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE,
-    description TEXT,
-    difficulty VARCHAR(32) NOT NULL
-) ENGINE=InnoDB;
+create table skills
+(
+    id          int unsigned AUTO_INCREMENT primary key,
+    name        varchar(255) NOT null unique,
+    description text,
+    difficulty  varchar(32)  NOT null
+);
 
-CREATE TABLE learning_paths (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    language VARCHAR(64) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB;
+create table learning_paths
+(
+    id          int unsigned AUTO_INCREMENT primary key,
+    name        varchar(255) NOT null,
+    description text,
+    language    varchar(64)  NOT null,
+    created_at  TIMESTAMP    NOT null DEFAULT CURRENT_TIMESTAMP
+);
 
-CREATE TABLE exercises (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    external_id VARCHAR(64) NOT NULL,
-    title VARCHAR(255) NOT NULL,
-    description TEXT,
-    difficulty VARCHAR(32),
-    source VARCHAR(32) NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE (source, external_id)
-) ENGINE=InnoDB;
+create table exercises
+(
+    id          int unsigned AUTO_INCREMENT primary key,
+    external_id varchar(64)  NOT null,
+    title       varchar(255) NOT null,
+    description text,
+    difficulty  varchar(32),
+    source      varchar(32)  NOT null,
+    created_at  TIMESTAMP    NOT null DEFAULT CURRENT_TIMESTAMP,
+    unique (source, external_id)
+);
 
-CREATE TABLE learning_path_skills (
-    learning_path_id INT UNSIGNED NOT NULL,
-    skill_id INT UNSIGNED NOT NULL,
-    sequence_order INT UNSIGNED NOT NULL,
-    PRIMARY KEY (learning_path_id, skill_id),
-    UNIQUE (learning_path_id, sequence_order),
-    FOREIGN KEY (learning_path_id) REFERENCES learning_paths(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
-) ENGINE=InnoDB;
+create table learning_path_skills
+(
+    learning_path_id int unsigned NOT null,
+    skill_id         int unsigned NOT null,
+    sequence_order   int unsigned NOT null,
+    primary key (learning_path_id, skill_id),
+    unique (learning_path_id, sequence_order),
+    foreign key (learning_path_id) references learning_paths (id),
+    foreign key (skill_id) references skills (id)
+);
 
-CREATE TABLE exercise_skills (
-    exercise_id INT UNSIGNED NOT NULL,
-    skill_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY (exercise_id, skill_id),
-    FOREIGN KEY (exercise_id) REFERENCES exercises(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
-) ENGINE=InnoDB;
+create table exercise_skills
+(
+    exercise_id int unsigned NOT null,
+    skill_id    int unsigned NOT null,
+    primary key (exercise_id, skill_id),
+    foreign key (exercise_id) references exercises (id),
+    foreign key (skill_id) references skills (id)
+);
 
-CREATE TABLE attempts (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    exercise_id INT UNSIGNED NOT NULL,
-    submitted_answer TEXT,
-    is_correct BOOLEAN NOT NULL DEFAULT FALSE,
-    attempted_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (exercise_id) REFERENCES exercises(id)
-) ENGINE=InnoDB;
+create table attempts
+(
+    id               int unsigned AUTO_INCREMENT primary key,
+    user_id          int unsigned NOT null,
+    exercise_id      int unsigned NOT null,
+    submitted_answer text,
+    is_correct       boolean      NOT null DEFAULT false,
+    attempted_at     TIMESTAMP    NOT null DEFAULT CURRENT_TIMESTAMP,
+    foreign key (user_id) references users (id),
+    foreign key (exercise_id) references exercises (id)
+);
 
-CREATE TABLE user_mastery (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNSIGNED NOT NULL,
-    skill_id INT UNSIGNED NOT NULL,
-    mastery_score DECIMAL(5,2) NOT NULL DEFAULT 0.00,
-    questions_attempted INT UNSIGNED NOT NULL DEFAULT 0,
-    questions_correct INT UNSIGNED NOT NULL DEFAULT 0,
-    last_practiced_at TIMESTAMP NULL,
-    UNIQUE (user_id, skill_id),
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
-) ENGINE=InnoDB;
+create table user_mastery
+(
+    id                  int unsigned AUTO_INCREMENT primary key,
+    user_id             int unsigned  NOT null,
+    skill_id            int unsigned  NOT null,
+    mastery_score       decimal(5, 2) NOT null DEFAULT 0.00,
+    questions_attempted int unsigned  NOT null DEFAULT 0,
+    questions_correct   int unsigned  NOT null DEFAULT 0,
+    last_practiced_at   TIMESTAMP     null,
+    unique (user_id, skill_id),
+    foreign key (user_id) references users (id),
+    foreign key (skill_id) references skills (id)
+);
 
-CREATE TABLE github_projects (
-    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    github_id VARCHAR(64) NOT NULL UNIQUE,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    url VARCHAR(500) NOT NULL,
-    language VARCHAR(64),
-    stars INT UNSIGNED NOT NULL DEFAULT 0,
-    forks INT UNSIGNED NOT NULL DEFAULT 0,
-    github_created_at TIMESTAMP NULL,
-    github_updated_at TIMESTAMP NULL
-) ENGINE=InnoDB;
+create table github_projects
+(
+    id                int unsigned AUTO_INCREMENT primary key,
+    github_id         varchar(64)  NOT null unique,
+    name              varchar(255) NOT null,
+    description       text,
+    url               varchar(500) NOT null,
+    language          varchar(64),
+    stars             int unsigned NOT null DEFAULT 0,
+    forks             int unsigned NOT null DEFAULT 0,
+    github_created_at TIMESTAMP    null,
+    github_updated_at TIMESTAMP    null
+);
 
-CREATE TABLE github_project_skills (
-    github_project_id INT UNSIGNED NOT NULL,
-    skill_id INT UNSIGNED NOT NULL,
-    PRIMARY KEY (github_project_id, skill_id),
-    FOREIGN KEY (github_project_id) REFERENCES github_projects(id),
-    FOREIGN KEY (skill_id) REFERENCES skills(id)
-) ENGINE=InnoDB;
+create table github_project_skills
+(
+    github_project_id int unsigned NOT null,
+    skill_id          int unsigned NOT null,
+    primary key (github_project_id, skill_id),
+    foreign key (github_project_id) references github_projects (id),
+    foreign key (skill_id) references skills (id)
+);

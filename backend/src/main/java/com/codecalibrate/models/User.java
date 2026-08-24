@@ -17,7 +17,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(nullable = false, unique = true, length = 50)
     private String username;
@@ -45,7 +45,7 @@ public class User {
         createdAt = LocalDateTime.now(ZoneOffset.UTC);
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 

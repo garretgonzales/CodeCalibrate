@@ -1,7 +1,7 @@
 package com.codecalibrate.dto;
 
 public record RegisterUserResponse(
-        Long id,
+        Integer id,
         String username,
         String email
 ) {

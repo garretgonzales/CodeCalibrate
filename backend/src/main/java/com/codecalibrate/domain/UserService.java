@@ -1,6 +1,7 @@
 package com.codecalibrate.domain;
 
 import com.codecalibrate.data.UserRepository;
+import com.codecalibrate.dto.LoginRequest;
 import com.codecalibrate.dto.RegisterUserRequest;
 import com.codecalibrate.models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,5 +40,18 @@ public class UserService {
         User user = new User(username, email, passwordHash);
 
         return userRepository.save(user);
+    }
+
+    public User authenticate(LoginRequest request) {
+        String email = request.getEmail().trim().toLowerCase(Locale.ROOT);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(InvalidCredentialsException::new);
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
+            throw new InvalidCredentialsException();
+        }
+
+        return user;
     }
 }

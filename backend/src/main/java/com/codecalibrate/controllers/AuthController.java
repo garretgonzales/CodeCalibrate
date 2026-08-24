@@ -11,14 +11,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.codecalibrate.domain.JwtService;
+import com.codecalibrate.dto.LoginRequest;
+import com.codecalibrate.dto.LoginResponse;
+
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, JwtService jwtService) {
+        this.jwtService = jwtService;
         this.userService = userService;
     }
 
@@ -34,5 +40,22 @@ public class AuthController {
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @Valid @RequestBody LoginRequest request
+    ) {
+        User user = userService.authenticate(request);
+        String token = jwtService.generateToken(user);
+
+        LoginResponse response = new LoginResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                token
+        );
+
+        return ResponseEntity.ok(response);
     }
 }

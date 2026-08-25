@@ -1,6 +1,7 @@
 package com.codecalibrate.controllers;
 
 import com.codecalibrate.domain.InvalidCredentialsException;
+import com.codecalibrate.domain.LearningPathNotFoundException;
 import com.codecalibrate.dto.ApiErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -37,5 +38,14 @@ public class GlobalExceptionHandler {
     public ApiErrorResponse handleInvalidCredentialsException(InvalidCredentialsException exception) {
         return new ApiErrorResponse(exception.getMessage(), Map.of());
     }
+
+    @ExceptionHandler(LearningPathNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiErrorResponse handleLearningPathNotFoundException(
+            LearningPathNotFoundException exception
+    ) {
+        return new ApiErrorResponse(exception.getMessage(), Map.of());
+    }
+
 
 }

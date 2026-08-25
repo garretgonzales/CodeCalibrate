@@ -50,3 +50,55 @@ values (@java_path_id, @variables_skill_id, 0),
        (@java_path_id, @control_flow_skill_id, 1),
        (@java_path_id, @methods_skill_id, 2)
 on duplicate key update sequence_order = VALUES(sequence_order);
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    expected_answer,
+    difficulty,
+    source
+)
+values
+    (
+        'java-variables-001',
+        'Print an Age Variable',
+        'Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.',
+        NULL,
+        'Beginner',
+        'CodeCalibrate'
+    )
+on duplicate key update
+                     title = VALUES(title),
+                     description = VALUES(description),
+                     expected_answer = VALUES(expected_answer),
+                     difficulty = VALUES(difficulty);
+
+set
+    @variables_skill_id = (
+        select
+            id
+        from
+            skills
+        where
+            name = 'Variables'
+    );
+
+set
+    @variables_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-variables-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@variables_exercise_id, @variables_skill_id)
+on duplicate key update
+    skill_id = VALUES(skill_id);

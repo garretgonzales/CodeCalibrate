@@ -30,6 +30,7 @@ create table exercises
     external_id varchar(64)  NOT null,
     title       varchar(255) NOT null,
     description text,
+    expected_answer text,
     difficulty  varchar(32),
     source      varchar(32)  NOT null,
     created_at  TIMESTAMP    NOT null DEFAULT CURRENT_TIMESTAMP,

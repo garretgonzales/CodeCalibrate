@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codecalibrate.domain.JwtService;
 import com.codecalibrate.dto.LoginRequest;
 import com.codecalibrate.dto.LoginResponse;
+import com.codecalibrate.dto.CurrentUserResponse;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
@@ -54,6 +57,19 @@ public class AuthController {
                 user.getUsername(),
                 user.getEmail(),
                 token
+        );
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<CurrentUserResponse> getCurrentUser(
+            @AuthenticationPrincipal User user
+    ) {
+        CurrentUserResponse response = new CurrentUserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail()
         );
 
         return ResponseEntity.ok(response);

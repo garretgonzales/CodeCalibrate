@@ -19,3 +19,16 @@ Content-Type: application/json
 "email": "codelearner@example.com",
 "password": "password12344556"
 }
+
+
+###
+# get current user by unique token - expect 200
+
+GET http://localhost:8080/api/auth/me
+Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb2RlbGVhcm5lckBleGFtcGxlLmNvbSIsImlhdCI6MTc4NzYxNDU0NiwiZXhwIjoxNzg3NjE4MTQ2fQ.xOOacnk0FN2Dt0rY00nJkUPQJRNeVtIV3TrszQnPoiSONxlpTA1OuNIDYgdeR3pbVa3CUBSkTxVNBvRB6K8IfA
+
+
+###
+# get current user by missing unique token - expect 401
+
+GET http://localhost:8080/api/auth/me

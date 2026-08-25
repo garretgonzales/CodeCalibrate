@@ -34,6 +34,7 @@ public class LearningPathPersistenceTest {
     public void setup() {
         learningPathRepository.deleteAll();
         skillRepository.deleteAll();
+        entityManager.flush();
 
         Skill variables = skillRepository.save(new Skill("Variables", "Store and work with values in Java.", "Beginner"));
 

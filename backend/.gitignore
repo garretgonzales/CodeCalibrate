@@ -19,6 +19,10 @@ target/
 *.iml
 *.ipr
 
+# Spring Run Config
+.run/
+
+
 # NetBeans
 /nbproject/private/
 /nbbuild/

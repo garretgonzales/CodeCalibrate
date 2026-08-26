@@ -1,25 +1,47 @@
 package com.codecalibrate.controllers;
 
 import com.codecalibrate.domain.ExerciseService;
+import com.codecalibrate.domain.ExerciseSubmissionResult;
+import com.codecalibrate.domain.ExerciseSubmissionService;
 import com.codecalibrate.dto.ExerciseResponse;
+import com.codecalibrate.dto.ExerciseSubmissionRequest;
+import com.codecalibrate.dto.ExerciseSubmissionResponse;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 @RequestMapping("/api/exercises")
 public class Exercise {
 
     private final ExerciseService exerciseService;
+    private final ExerciseSubmissionService exerciseSubmissionService;
 
-    public Exercise(ExerciseService exerciseService) {
+    public Exercise(
+            ExerciseService exerciseService,
+            ExerciseSubmissionService exerciseSubmissionService
+    ) {
         this.exerciseService = exerciseService;
+        this.exerciseSubmissionService = exerciseSubmissionService;
     }
 
     @GetMapping("/{id}")
     public ExerciseResponse getExerciseById(@PathVariable Integer id) {
         return exerciseService.getExerciseById(id);
+    }
+
+    @PostMapping("/{id}/submissions")
+    public ExerciseSubmissionResponse submitExercise(
+            @PathVariable Integer id,
+            @Valid @RequestBody ExerciseSubmissionRequest request
+    ) {
+        ExerciseSubmissionResult result =
+                exerciseSubmissionService.submit(id, request.sourceCode());
+
+        return new ExerciseSubmissionResponse(result.correct());
     }
 }

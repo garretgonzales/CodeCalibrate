@@ -2,6 +2,8 @@ package com.codecalibrate.controllers;
 
 import com.codecalibrate.data.ExerciseRepository;
 import com.codecalibrate.data.SkillRepository;
+import com.codecalibrate.domain.content.ExerciseContentDefinition;
+import com.codecalibrate.domain.content.GitHubExerciseContentClient;
 import com.codecalibrate.models.Exercise;
 import com.codecalibrate.models.Skill;
 import jakarta.transaction.Transactional;
@@ -10,11 +12,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Mockito.when;import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +38,9 @@ public class ExerciseIntegrationTest {
 
     private Exercise exercise;
     private String skillName;
+
+    @MockitoBean
+    private GitHubExerciseContentClient gitHubExerciseContentClient;
 
     @BeforeEach
     public void setUp() {
@@ -57,6 +64,25 @@ public class ExerciseIntegrationTest {
 
         exercise.addSkill(variables);
         exerciseRepository.saveAndFlush(exercise);
+
+        when(gitHubExerciseContentClient.getExerciseContent(exercise.getExternalId()))
+                .thenReturn(new ExerciseContentDefinition(
+                        exercise.getExternalId(),
+                        1,
+                        "java",
+                        "Print an Age Variable",
+                        "Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.",
+                        "Beginner",
+
+                        """
+                                public class Main {
+                                    public static void main(String[] args) {
+                                    // Write your code here...
+                                    }
+                                    }
+                                """,
+                        null
+                ));
     }
 
     @Test
@@ -68,7 +94,11 @@ public class ExerciseIntegrationTest {
                 .andExpect(jsonPath("$.title").value("Print an Age Variable"))
                 .andExpect(jsonPath("$.difficulty").value("Beginner"))
                 .andExpect(jsonPath("$.skills[0].name").value(skillName))
-                .andExpect(jsonPath("$.expectedAnswer").doesNotExist());
+                .andExpect(jsonPath("$.expectedAnswer").doesNotExist())
+                .andExpect(jsonPath("$.starterCode")
+                        .value(containsString("public class Main")))
+                .andExpect(jsonPath("$.execution").doesNotExist())
+                .andExpect(jsonPath("$.tests").doesNotExist());
     }
 
     @Test

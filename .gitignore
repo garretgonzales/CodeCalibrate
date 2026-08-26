@@ -2,6 +2,9 @@
 .idea/
 *.iml
 
+# Spring Run Config
+.run/
+
 # Java / Spring Boot
 target/
 *.class

@@ -1,6 +1,8 @@
 package com.codecalibrate.domain;
 
 import com.codecalibrate.data.ExerciseRepository;
+import com.codecalibrate.domain.content.ExerciseContentDefinition;
+import com.codecalibrate.domain.content.GitHubExerciseContentClient;
 import com.codecalibrate.dto.ExerciseResponse;
 import com.codecalibrate.dto.SkillResponse;
 import com.codecalibrate.models.Exercise;
@@ -14,19 +16,27 @@ import java.util.List;
 public class ExerciseService {
 
     private final ExerciseRepository exerciseRepository;
+    private final GitHubExerciseContentClient gitHubExerciseContentClient;
 
-    public ExerciseService(ExerciseRepository exerciseRepository) {
+    public ExerciseService(ExerciseRepository exerciseRepository, GitHubExerciseContentClient gitHubExerciseContentClient) {
         this.exerciseRepository = exerciseRepository;
+        this.gitHubExerciseContentClient = gitHubExerciseContentClient;
     }
 
     public ExerciseResponse getExerciseById(Integer id) {
         Exercise exercise = exerciseRepository.findById(id)
                 .orElseThrow(() -> new ExerciseNotFoundException(id));
 
-        return toResponse(exercise);
+        ExerciseContentDefinition contentDefinition = gitHubExerciseContentClient.getExerciseContent(exercise.getExternalId());
+
+        if (!exercise.getExternalId().equals(contentDefinition.id())) {
+            throw new IllegalStateException("Exercise content does not match the requested exercise.");
+        }
+
+        return toResponse(exercise, contentDefinition);
     }
 
-    private ExerciseResponse toResponse(Exercise exercise) {
+    private ExerciseResponse toResponse(Exercise exercise, ExerciseContentDefinition contentDefinition) {
         List<SkillResponse> skills = exercise.getSkills().stream()
                 .map(skill -> new SkillResponse(
                         skill.getId(),
@@ -43,6 +53,7 @@ public class ExerciseService {
                 exercise.getDescription(),
                 exercise.getDifficulty(),
                 exercise.getSource(),
+                contentDefinition.starterCode(),
                 skills
         );
     }

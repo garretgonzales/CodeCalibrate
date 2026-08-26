@@ -10,6 +10,7 @@ public record ExerciseResponse (
         String description,
         String difficulty,
         String source,
+        String starterCode,
         List<SkillResponse> skills
 ){
 }

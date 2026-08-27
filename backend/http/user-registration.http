@@ -25,10 +25,40 @@ Content-Type: application/json
 # get current user by unique token - expect 200
 
 GET http://localhost:8080/api/auth/me
-Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjb2RlbGVhcm5lckBleGFtcGxlLmNvbSIsImlhdCI6MTc4NzYxNDU0NiwiZXhwIjoxNzg3NjE4MTQ2fQ.xOOacnk0FN2Dt0rY00nJkUPQJRNeVtIV3TrszQnPoiSONxlpTA1OuNIDYgdeR3pbVa3CUBSkTxVNBvRB6K8IfA
+Authorization: Bearer {{authToken}}
 
 
 ###
 # get current user by missing unique token - expect 401
 
 GET http://localhost:8080/api/auth/me
+
+### Log in and save JWT for this HTTP Client session
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "codelearner@example.com",
+  "password": "password123"
+}
+
+> {% client.global.set("authToken", response.body.token); %}
+
+### Submit a correct Java solution — expect 200 / correct: true
+POST http://localhost:8080/api/exercises/1/submissions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "sourceCode": "public class Main {\n    public static void main(String[] args) {\n        int age = 25;\n        System.out.println(age);\n    }\n}"
+}
+
+
+### Submit a correct Java solution — expect 200 / correct: false
+POST http://localhost:8080/api/exercises/1/submissions
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+  "sourceCode": "public class Main {\n    public static void main(String[] args) {\n        int age = 22;\n        System.out.println(age);\n    }\n}"
+}

@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/exercises")
-public class Exercise {
+public class ExerciseController {
 
     private final ExerciseService exerciseService;
     private final ExerciseSubmissionService exerciseSubmissionService;
 
-    public Exercise(
+    public ExerciseController(
             ExerciseService exerciseService,
             ExerciseSubmissionService exerciseSubmissionService
     ) {

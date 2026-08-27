@@ -28,7 +28,7 @@ GET http://localhost:8080/api/auth/me
 Authorization: Bearer {{authToken}}
 
 
-###
+###E
 # get current user by missing unique token - expect 401
 
 GET http://localhost:8080/api/auth/me

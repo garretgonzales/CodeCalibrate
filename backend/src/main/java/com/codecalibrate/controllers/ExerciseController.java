@@ -13,35 +13,29 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 @RequestMapping("/api/exercises")
 public class ExerciseController {
 
-    private final ExerciseService exerciseService;
-    private final ExerciseSubmissionService exerciseSubmissionService;
+  private final ExerciseService exerciseService;
+  private final ExerciseSubmissionService exerciseSubmissionService;
 
-    public ExerciseController(
-            ExerciseService exerciseService,
-            ExerciseSubmissionService exerciseSubmissionService
-    ) {
-        this.exerciseService = exerciseService;
-        this.exerciseSubmissionService = exerciseSubmissionService;
-    }
+  public ExerciseController(
+      ExerciseService exerciseService, ExerciseSubmissionService exerciseSubmissionService) {
+    this.exerciseService = exerciseService;
+    this.exerciseSubmissionService = exerciseSubmissionService;
+  }
 
-    @GetMapping("/{id}")
-    public ExerciseResponse getExerciseById(@PathVariable Integer id) {
-        return exerciseService.getExerciseById(id);
-    }
+  @GetMapping("/{id}")
+  public ExerciseResponse getExerciseById(@PathVariable Integer id) {
+    return exerciseService.getExerciseById(id);
+  }
 
-    @PostMapping("/{id}/submissions")
-    public ExerciseSubmissionResponse submitExercise(
-            @PathVariable Integer id,
-            @Valid @RequestBody ExerciseSubmissionRequest request
-    ) {
-        ExerciseSubmissionResult result =
-                exerciseSubmissionService.submit(id, request.sourceCode());
+  @PostMapping("/{id}/submissions")
+  public ExerciseSubmissionResponse submitExercise(
+      @PathVariable Integer id, @Valid @RequestBody ExerciseSubmissionRequest request) {
+    ExerciseSubmissionResult result = exerciseSubmissionService.submit(id, request.sourceCode());
 
-        return new ExerciseSubmissionResponse(result.correct());
-    }
+    return new ExerciseSubmissionResponse(result.correct());
+  }
 }

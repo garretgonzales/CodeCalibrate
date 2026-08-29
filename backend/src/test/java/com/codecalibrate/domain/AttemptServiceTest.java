@@ -17,11 +17,13 @@ public class AttemptServiceTest {
 
   private AttemptRepository attemptRepository;
   private AttemptService service;
+  private MasteryService masteryService;
 
   @BeforeEach
   void setUp() {
     attemptRepository = mock(AttemptRepository.class);
-    service = new AttemptService(attemptRepository);
+    masteryService = mock(MasteryService.class);
+    service = new AttemptService(attemptRepository, masteryService);
   }
 
   @Test
@@ -49,5 +51,7 @@ public class AttemptServiceTest {
     assertThat(savedAttempt.getUser()).isSameAs(user);
     assertThat(savedAttempt.getExercise()).isSameAs(exercise);
     assertThat(savedAttempt.isCorrect()).isTrue();
+
+    verify(masteryService).recordAttempt(user.getId(), exercise.getId(), true);
   }
 }

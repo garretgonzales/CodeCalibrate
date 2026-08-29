@@ -1,21 +1,22 @@
-import "./App.css";
+import { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
 
 function App() {
-  return (
-    <main className="app-shell">
-      <header className="app-header">
-        <h1>Code Calibrate</h1>
-        <p>Practice what you need. Build toward mastery.</p>
-      </header>
+  const [authSession, setAuthSession] = useState(null);
 
-      <section className="app-content">
-        <h2>Frontend connected next</h2>
-        <p>
-          This screen will become the login, exercise, and result flow for the
-          MVP.
-        </p>
-      </section>
-    </main>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage onLogin={setAuthSession} />} />
+        <Route
+          path="/dashboard"
+          element={<DashboardPage authSession={authSession} />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

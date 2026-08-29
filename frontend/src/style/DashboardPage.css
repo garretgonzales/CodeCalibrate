@@ -1,0 +1,25 @@
+.status-card,
+.recommendation-card {
+  max-width: 42rem;
+  padding: 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.recommendation-card {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.recommendation-card h2,
+.recommendation-card h3,
+.status-card h2,
+.recommendation-card p {
+  margin: 0;
+}
+
+.skill-list {
+  margin: 0;
+  color: #4b5563;
+}

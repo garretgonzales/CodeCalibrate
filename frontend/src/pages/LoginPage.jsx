@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
 import "../style/LoginPage.css";
+import "../style/AppLayout.css";
 
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState("");

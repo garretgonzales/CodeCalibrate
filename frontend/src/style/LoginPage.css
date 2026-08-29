@@ -1,20 +1,4 @@
-.page-shell {
-  min-height: 100vh;
-  max-width: 48rem;
-  margin: 0 auto;
-  padding: 3rem 1.5rem;
-}
-
-.page-header {
-  margin-bottom: 3rem;
-}
-
-.page-header h1 {
-  margin: 0 0 0.5rem;
-}
-
-.login-card,
-.status-card {
+.login-card {
   max-width: 28rem;
   padding: 1.5rem;
   border: 1px solid #d1d5db;
@@ -22,8 +6,7 @@
   background: #ffffff;
 }
 
-.login-card h2,
-.status-card h2 {
+.login-card h2 {
   margin-top: 0;
 }
 

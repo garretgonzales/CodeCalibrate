@@ -8,19 +8,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.codecalibrate.data.AttemptRepository;
-import com.codecalibrate.data.ExerciseRepository;
-import com.codecalibrate.data.SkillRepository;
-import com.codecalibrate.data.UserRepository;
+import com.codecalibrate.data.*;
 import com.codecalibrate.domain.JwtService;
 import com.codecalibrate.domain.content.ExerciseContentDefinition;
 import com.codecalibrate.domain.content.GitHubExerciseContentClient;
 import com.codecalibrate.domain.judge.Judge0Client;
 import com.codecalibrate.domain.judge.Judge0SubmissionStatus;
-import com.codecalibrate.models.Attempt;
-import com.codecalibrate.models.Exercise;
-import com.codecalibrate.models.Skill;
-import com.codecalibrate.models.User;
+import com.codecalibrate.models.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -55,6 +49,8 @@ public class ExerciseIntegrationTest {
   @MockitoBean private Judge0Client judge0Client;
 
   @Autowired private AttemptRepository attemptRepository;
+
+  @Autowired private UserMasteryRepository userMasteryRepository;
 
   @Autowired private EntityManager entityManager;
 
@@ -176,6 +172,15 @@ public class ExerciseIntegrationTest {
     assertThat(attempt.getExercise().getId()).isEqualTo(exercise.getId());
     assertThat(attempt.isCorrect()).isTrue();
     assertThat(attempt.getAttemptedAt()).isNotNull();
+
+    UserMastery mastery = userMasteryRepository.findAll().stream().findFirst().orElseThrow();
+
+    assertThat(mastery.getUser().getId()).isEqualTo(user.getId());
+    assertThat(mastery.getSkill().getName()).isEqualTo(skillName);
+    assertThat(mastery.getQuestionsAttempted()).isEqualTo(1);
+    assertThat(mastery.getQuestionsCorrect()).isEqualTo(1);
+    assertThat(mastery.getMasteryScore()).isEqualByComparingTo("100.00");
+    assertThat(mastery.getLastPracticedAt()).isNotNull();
   }
 
   @Test

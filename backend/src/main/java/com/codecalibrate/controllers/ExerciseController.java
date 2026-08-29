@@ -3,6 +3,7 @@ package com.codecalibrate.controllers;
 import com.codecalibrate.domain.ExerciseService;
 import com.codecalibrate.domain.ExerciseSubmissionResult;
 import com.codecalibrate.domain.ExerciseSubmissionService;
+import com.codecalibrate.domain.RecommendationService;
 import com.codecalibrate.dto.ExerciseResponse;
 import com.codecalibrate.dto.ExerciseSubmissionRequest;
 import com.codecalibrate.dto.ExerciseSubmissionResponse;
@@ -22,11 +23,21 @@ public class ExerciseController {
 
   private final ExerciseService exerciseService;
   private final ExerciseSubmissionService exerciseSubmissionService;
+  private final RecommendationService recommendationService;
 
   public ExerciseController(
-      ExerciseService exerciseService, ExerciseSubmissionService exerciseSubmissionService) {
+      ExerciseService exerciseService,
+      ExerciseSubmissionService exerciseSubmissionService,
+      RecommendationService recommendationService) {
     this.exerciseService = exerciseService;
     this.exerciseSubmissionService = exerciseSubmissionService;
+    this.recommendationService = recommendationService;
+  }
+
+  @GetMapping("/recommended")
+  public ExerciseResponse getRecommendedExercise(@AuthenticationPrincipal User user) {
+    return exerciseService.getExerciseById(
+        recommendationService.recommendNextExercise(user).getId());
   }
 
   @GetMapping("/{id}")

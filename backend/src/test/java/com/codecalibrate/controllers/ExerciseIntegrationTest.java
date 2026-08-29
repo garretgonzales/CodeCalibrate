@@ -2,6 +2,7 @@ package com.codecalibrate.controllers;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.codecalibrate.data.*;
 import com.codecalibrate.domain.JwtService;
+import com.codecalibrate.domain.RecommendationService;
 import com.codecalibrate.domain.content.ExerciseContentDefinition;
 import com.codecalibrate.domain.content.GitHubExerciseContentClient;
 import com.codecalibrate.domain.judge.Judge0Client;
@@ -35,6 +37,8 @@ import org.springframework.test.web.servlet.MockMvc;
 public class ExerciseIntegrationTest {
 
   @Autowired private MockMvc mockMvc;
+
+  @MockitoBean private RecommendationService recommendationService;
 
   @Autowired private ExerciseRepository exerciseRepository;
 
@@ -134,6 +138,27 @@ public class ExerciseIntegrationTest {
         .perform(get("/api/exercises/{id}", 999))
         .andExpect(status().isNotFound())
         .andExpect(jsonPath("$.message").value("Exercise with ID 999 was not found."));
+  }
+
+  @Test
+  void shouldReturnRecommendedExerciseForAuthenticatedUser() throws Exception {
+    when(recommendationService.recommendNextExercise(any(User.class))).thenReturn(exercise);
+
+    mockMvc
+        .perform(
+            get("/api/exercises/recommended").header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(exercise.getId()))
+        .andExpect(jsonPath("$.title").value("Print an Age Variable"))
+        .andExpect(jsonPath("$.starterCode").value(containsString("public class Main")))
+        .andExpect(jsonPath("$.expectedAnswer").doesNotExist())
+        .andExpect(jsonPath("$.execution").doesNotExist())
+        .andExpect(jsonPath("$.tests").doesNotExist());
+  }
+
+  @Test
+  void shouldRejectRecommendedExerciseRequestWithoutJwt() throws Exception {
+    mockMvc.perform(get("/api/exercises/recommended")).andExpect(status().isUnauthorized());
   }
 
   @Test

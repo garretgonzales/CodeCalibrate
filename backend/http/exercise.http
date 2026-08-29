@@ -1,9 +1,0 @@
-
-### Get a public exercise — expect 200 and no expectedAnswer field
-GET http://localhost:8080/api/exercises/1
-
-### Unknown exercise — expect 404
-GET http://localhost:8080/api/exercises/999
-
-### Public exercise with private GitHub starter code — expect 200
-GET http://localhost:8080/api/exercises/1

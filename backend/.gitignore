@@ -35,3 +35,6 @@ build/
 
 # VS Code
 .vscode/
+
+# Local IntelliJ HTTP Client requests and test credentials
+/http/

@@ -29,6 +29,11 @@ function DashboardPage({ authSession, onLogout }) {
           setExercise(response);
         }
       } catch (requestError) {
+        if (isActive && requestError.status === 401) {
+          onLogout();
+          return;
+        }
+
         if (isActive) {
           setError(requestError.message);
         }
@@ -44,7 +49,7 @@ function DashboardPage({ authSession, onLogout }) {
     return () => {
       isActive = false;
     };
-  }, [authSession]);
+  }, [authSession, onLogout]);
 
   if (!authSession) {
     return <Navigate to="/" replace />;

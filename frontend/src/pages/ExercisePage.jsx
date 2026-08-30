@@ -65,6 +65,11 @@ function ExercisePage({ authSession, onLogout }) {
 
       setResult(response);
     } catch (requestError) {
+      if (requestError.status === 401) {
+        onLogout();
+        return;
+      }
+
       setError(requestError.message);
     } finally {
       setIsSubmitting(false);

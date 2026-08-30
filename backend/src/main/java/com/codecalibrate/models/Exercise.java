@@ -34,9 +34,6 @@ public class Exercise {
     @Column(columnDefinition = "text")
     private String description;
 
-    @Column(name = "expected_answer", columnDefinition = "text")
-    private String expectedAnswer;
-
     @Column(length = 32)
     private String difficulty;
 
@@ -61,14 +58,12 @@ public class Exercise {
             String externalId,
             String title,
             String description,
-            String expectedAnswer,
             String difficulty,
             String source
     ) {
         this.externalId = externalId;
         this.title = title;
         this.description = description;
-        this.expectedAnswer = expectedAnswer;
         this.difficulty = difficulty;
         this.source = source;
     }
@@ -96,10 +91,6 @@ public class Exercise {
 
     public String getDescription() {
         return description;
-    }
-
-    public String getExpectedAnswer() {
-        return expectedAnswer;
     }
 
     public String getDifficulty() {

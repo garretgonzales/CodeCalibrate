@@ -78,7 +78,6 @@ public class ExerciseIntegrationTest {
             "test-exercise-" + testId,
             "Print an Age Variable",
             "Declare an int variable named age, assign it the value 25, and print it.",
-            null,
             "Beginner",
             "CodeCalibrate");
 

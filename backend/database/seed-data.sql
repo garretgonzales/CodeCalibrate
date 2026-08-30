@@ -56,7 +56,6 @@ insert into
     external_id,
     title,
     description,
-    expected_answer,
     difficulty,
     source
 )
@@ -65,14 +64,12 @@ values
         'java-variables-001',
         'Print an Age Variable',
         'Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.',
-        NULL,
         'Beginner',
         'CodeCalibrate'
     )
 on duplicate key update
                      title = VALUES(title),
                      description = VALUES(description),
-                     expected_answer = VALUES(expected_answer),
                      difficulty = VALUES(difficulty);
 
 set

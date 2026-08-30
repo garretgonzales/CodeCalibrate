@@ -17,3 +17,23 @@ export async function login(credentials) {
 
   return body;
 }
+
+export async function register(registration) {
+  const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(registration),
+  });
+
+  const body = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const error = new Error(body.message ?? "Unable to create the account.");
+    error.fieldErrors = body.errors ?? {};
+    throw error;
+  }
+
+  return body;
+}

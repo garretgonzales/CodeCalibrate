@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import { login } from "../api/auth";
 import "../style/LoginPage.css";
 import "../style/AppLayout.css";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function LoginPage({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -10,6 +11,7 @@ function LoginPage({ onLogin }) {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -37,7 +39,11 @@ function LoginPage({ onLogin }) {
 
       <section className="login-card" aria-labelledby="login-heading">
         <h2 id="login-heading">Log in</h2>
-
+        {location.state?.message && (
+          <p className="form-success" role="status">
+            {location.state.message}
+          </p>
+        )}
         <form onSubmit={handleSubmit}>
           <label htmlFor="email">Email</label>
           <input
@@ -69,6 +75,9 @@ function LoginPage({ onLogin }) {
             {isSubmitting ? "Logging in…" : "Log in"}
           </button>
         </form>
+        <p>
+          New to Code Calibrate? <Link to="/register">Create an account</Link>
+        </p>
       </section>
     </main>
   );

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import ExercisePage from "./pages/ExercisePage";
+import RegisterPage from "./pages/RegisterPage";
 
 const AUTH_SESSION_STORAGE_KEY = "codeCalibrate.authSession";
 
@@ -50,6 +51,7 @@ function App() {
           path="/dashboard"
           element={<DashboardPage authSession={authSession} />}
         />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/exercises/:exerciseId"
           element={<ExercisePage authSession={authSession} />}

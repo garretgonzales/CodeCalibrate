@@ -32,3 +32,32 @@
   color: #4b5563;
   text-align: right;
 }
+
+.submit-exercise-button {
+  justify-self: start;
+}
+
+.result-card {
+  padding: 1.5rem;
+  border: 1px solid;
+  border-radius: 0.75rem;
+}
+
+.result-card h2,
+.result-card p {
+  margin-top: 0;
+}
+
+.result-correct {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.result-incorrect {
+  border-color: #d97706;
+  background: #fffbeb;
+}
+
+.next-recommendation-link {
+  font-weight: 600;
+}

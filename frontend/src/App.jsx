@@ -43,18 +43,27 @@ function App() {
     setAuthSession(authSession);
   }
 
+  function handleLogout() {
+    window.sessionStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
+    setAuthSession(null);
+  }
+
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
         <Route
           path="/dashboard"
-          element={<DashboardPage authSession={authSession} />}
+          element={
+            <DashboardPage authSession={authSession} onLogout={handleLogout} />
+          }
         />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/exercises/:exerciseId"
-          element={<ExercisePage authSession={authSession} />}
+          element={
+            <ExercisePage authSession={authSession} onLogout={handleLogout} />
+          }
         />
       </Routes>
     </BrowserRouter>

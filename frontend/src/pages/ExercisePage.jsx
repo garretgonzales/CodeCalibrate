@@ -3,8 +3,9 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { getExerciseById, submitExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/ExercisePage.css";
+import LogoutButton from "../components/LogoutButton";
 
-function ExercisePage({ authSession }) {
+function ExercisePage({ authSession, onLogout }) {
   const { exerciseId } = useParams();
   const [exercise, setExercise] = useState(null);
   const [sourceCode, setSourceCode] = useState("");
@@ -79,6 +80,7 @@ function ExercisePage({ authSession }) {
       <header className="page-header">
         <Link to="/dashboard">← Dashboard</Link>
         <h1>{exercise?.title ?? "Exercise"}</h1>
+        <LogoutButton onLogout={onLogout} />
       </header>
 
       {isLoading && <p>Loading exercise…</p>}

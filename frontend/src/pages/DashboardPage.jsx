@@ -3,8 +3,9 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { getRecommendedExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/DashboardPage.css";
+import LogoutButton from "../components/LogoutButton";
 
-function DashboardPage({ authSession }) {
+function DashboardPage({ authSession, onLogout }) {
   const [exercise, setExercise] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -54,6 +55,7 @@ function DashboardPage({ authSession }) {
       <header className="page-header">
         <h1>Code Calibrate</h1>
         <p>Practice what you need. Build toward mastery.</p>
+        <LogoutButton onLogout={onLogout} />
       </header>
 
       <section className="status-card">

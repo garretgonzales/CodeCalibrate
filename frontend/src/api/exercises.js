@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "./apiConfig";
+import { createApiError } from "./apiError";
 
 export async function getRecommendedExercise(token) {
   const response = await fetch(`${API_BASE_URL}/api/exercises/recommended`, {
@@ -10,7 +11,7 @@ export async function getRecommendedExercise(token) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(body.message ?? "Unable to load the recommended exercise.");
+    throw createApiError(response, body, "Unable to load the exercise.");
   }
 
   return body;
@@ -22,7 +23,7 @@ export async function getExerciseById(exerciseId) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(body.message ?? "Unable to load the exercise.");
+    throw createApiError(response, body, "Unable to load the exercise.");
   }
 
   return body;
@@ -44,7 +45,7 @@ export async function submitExercise(exerciseId, sourceCode, token) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(body.message ?? "Unable to submit the exercise.");
+    throw createApiError(response, body, "Unable to load the exercise.");
   }
 
   return body;

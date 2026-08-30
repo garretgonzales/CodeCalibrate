@@ -45,7 +45,6 @@ public class AttemptRepositoryPersistenceTest {
                 "attempt-exercise-" + testId,
                 "Attempt Test Exercise",
                 "Temporary exercise used only by this persistence test.",
-                null,
                 "Beginner",
                 "CodeCalibrate"));
   }

@@ -51,7 +51,6 @@ public class MasteryServiceTest {
             "java-variables-001",
             "Print an Age Variable",
             "Temporary exercise for this test.",
-            null,
             "Beginner",
             "CodeCalibrate");
 

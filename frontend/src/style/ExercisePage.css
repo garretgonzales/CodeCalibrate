@@ -1,0 +1,63 @@
+.exercise-page {
+  max-width: 64rem;
+}
+
+.exercise-instructions,
+.editor-section {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.editor-section {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.code-editor {
+  width: 100%;
+  min-height: 24rem;
+  padding: 1rem;
+  resize: vertical;
+  border: 1px solid #6b7280;
+  border-radius: 0.375rem;
+  font-family: Consolas, "Courier New", monospace;
+  line-height: 1.5;
+}
+
+.character-count {
+  margin: 0;
+  color: #4b5563;
+  text-align: right;
+}
+
+.submit-exercise-button {
+  justify-self: start;
+}
+
+.result-card {
+  padding: 1.5rem;
+  border: 1px solid;
+  border-radius: 0.75rem;
+}
+
+.result-card h2,
+.result-card p {
+  margin-top: 0;
+}
+
+.result-correct {
+  border-color: #16a34a;
+  background: #f0fdf4;
+}
+
+.result-incorrect {
+  border-color: #d97706;
+  background: #fffbeb;
+}
+
+.next-recommendation-link {
+  font-weight: 600;
+}

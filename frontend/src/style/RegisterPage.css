@@ -1,0 +1,48 @@
+.registration-card {
+  max-width: 32rem;
+  padding: 1.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.registration-card h2 {
+  margin-top: 0;
+}
+
+.registration-form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.registration-form input,
+.registration-form button {
+  font: inherit;
+}
+
+.registration-form input {
+  padding: 0.65rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.375rem;
+}
+
+.registration-form button {
+  margin-top: 0.5rem;
+  padding: 0.7rem 1rem;
+  border: 0;
+  border-radius: 0.375rem;
+  color: #ffffff;
+  background: #1d4ed8;
+  cursor: pointer;
+}
+
+.registration-form button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.field-error {
+  margin: -0.4rem 0 0;
+  color: #b91c1c;
+  font-size: 0.875rem;
+}

@@ -103,7 +103,6 @@ public class ExerciseSubmissionServiceTest {
         "java-variables-001",
         "Print an Age Variable",
         "Declare an int variable named age and print it.",
-        null,
         "Beginner",
         "CodeCalibrate");
   }

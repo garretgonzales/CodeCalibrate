@@ -3,12 +3,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
+import ExercisePage from "./pages/ExercisePage";
 
 const AUTH_SESSION_STORAGE_KEY = "codeCalibrate.authSession";
 
 function readStoredAuthSession() {
   try {
-    const storedSession = window.sessionStorage.getItem(AUTH_SESSION_STORAGE_KEY);
+    const storedSession = window.sessionStorage.getItem(
+      AUTH_SESSION_STORAGE_KEY,
+    );
 
     if (!storedSession) {
       return null;
@@ -46,6 +49,10 @@ function App() {
         <Route
           path="/dashboard"
           element={<DashboardPage authSession={authSession} />}
+        />
+        <Route
+          path="/exercises/:exerciseId"
+          element={<ExercisePage authSession={authSession} />}
         />
       </Routes>
     </BrowserRouter>

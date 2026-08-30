@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { getRecommendedExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/DashboardPage.css";
@@ -8,6 +8,7 @@ function DashboardPage({ authSession }) {
   const [exercise, setExercise] = useState(null);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!authSession) {
@@ -80,6 +81,12 @@ function DashboardPage({ authSession }) {
             <strong>Skills:</strong>{" "}
             {exercise.skills.map((skill) => skill.name).join(", ")}
           </p>
+          <button
+            className="start-exercise-button"
+            type="button"
+            onClick={() => navigate(`/exercises/${exercise.id}`)}>
+            Start exercise
+          </button>
         </section>
       )}
     </main>

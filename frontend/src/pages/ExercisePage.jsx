@@ -125,7 +125,7 @@ function ExercisePage({ authSession, onLogout }) {
             </p>
 
             <button
-              className="submit-exercise-button"
+              className="primary-button justify-self-start"
               type="submit"
               disabled={isSubmitting || sourceCode.trim() === ""}>
               {isSubmitting ? "Checking solution…" : "Submit solution"}

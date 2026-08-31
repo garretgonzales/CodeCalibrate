@@ -8,6 +8,8 @@ import tools.jackson.databind.JsonNode;
 
 import java.net.URI;
 import java.util.Map;
+import com.codecalibrate.domain.Judge0UnavailableException;
+import org.springframework.web.client.RestClientException;
 
 @Component
 public class Judge0Client {
@@ -26,6 +28,40 @@ public class Judge0Client {
         this.properties = properties;
     }
 
+//    public String createSubmission(
+//            String sourceCode,
+//            String standardInput,
+//            String expectedOutput,
+//            int timeLimitSeconds,
+//            int memoryLimitKilobytes
+//    ) {
+//        SubmissionToken response = restClient.post()
+//                .uri(buildSubmissionUri())
+//                .header("X-RapidAPI-Host", properties.rapidApiHost())
+//                .header("X-RapidAPI-Key", properties.rapidApiKey())
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .body(Map.of(
+//                        "source_code", sourceCode,
+//                        "language_id", properties.javaLanguageId(),
+//                        "stdin", standardInput,
+//                        "expected_output", expectedOutput,
+//                        "cpu_time_limit", timeLimitSeconds,
+//                        "memory_limit", memoryLimitKilobytes
+//                ))
+//                .retrieve()
+//                .body(SubmissionToken.class);
+//
+//        if (response == null || response.token() == null || response.token().isBlank()) {
+//            throw new IllegalStateException("Judge0 did not return a submission token.");
+//        }
+//
+//        return response.token();
+//    }
+
+
+    /* confirming Judge0 unavailable exceptionn- catch RestClientExcep,
+     covering http failures/connection-level client failure*/
+
     public String createSubmission(
             String sourceCode,
             String standardInput,
@@ -33,49 +69,68 @@ public class Judge0Client {
             int timeLimitSeconds,
             int memoryLimitKilobytes
     ) {
-        SubmissionToken response = restClient.post()
-                .uri(buildSubmissionUri())
-                .header("X-RapidAPI-Host", properties.rapidApiHost())
-                .header("X-RapidAPI-Key", properties.rapidApiKey())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Map.of(
-                        "source_code", sourceCode,
-                        "language_id", properties.javaLanguageId(),
-                        "stdin", standardInput,
-                        "expected_output", expectedOutput,
-                        "cpu_time_limit", timeLimitSeconds,
-                        "memory_limit", memoryLimitKilobytes
-                ))
-                .retrieve()
-                .body(SubmissionToken.class);
+        SubmissionToken response;
 
-        if (response == null || response.token() == null || response.token().isBlank()) {
-            throw new IllegalStateException("Judge0 did not return a submission token.");
+        try {
+            response = restClient.post()
+                                 .uri(buildSubmissionUri())
+                                 .header("X-RapidAPI-Host", properties.rapidApiHost())
+                                 .header("X-RapidAPI-Key", properties.rapidApiKey())
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .body(Map.of(
+                                         "source_code", sourceCode,
+                                         "language_id", properties.javaLanguageId(),
+                                         "stdin", standardInput,
+                                         "expected_output", expectedOutput,
+                                         "cpu_time_limit", timeLimitSeconds,
+                                         "memory_limit", memoryLimitKilobytes
+                                 ))
+                                 .retrieve()
+                                 .body(SubmissionToken.class);
+        } catch (RestClientException exception) {
+            throw new Judge0UnavailableException(exception);
+        }
+
+        if (response == null
+            || response.token() == null
+            || response.token().isBlank()) {
+            throw new IllegalStateException(
+                    "Judge0 did not return a submission token."
+            );
         }
 
         return response.token();
     }
 
 
+    // TO-DO: confirm polling request does not leaak Spring's provider exception
     public Judge0SubmissionStatus getSubmissionStatus(String token) {
-        JsonNode response = restClient.get()
-                .uri(buildSubmissionStatusUri(token))
-                .header("X-RapidAPI-Host", properties.rapidApiHost())
-                .header("X-RapidAPI-Key", properties.rapidApiKey())
-                .retrieve()
-                .body(JsonNode.class);
+        JsonNode response;
+
+        try {
+            response = restClient.get()
+                                 .uri(buildSubmissionStatusUri(token))
+                                 .header("X-RapidAPI-Host", properties.rapidApiHost())
+                                 .header("X-RapidAPI-Key", properties.rapidApiKey())
+                                 .retrieve()
+                                 .body(JsonNode.class);
+        } catch (RestClientException exception) {
+            throw new Judge0UnavailableException(exception);
+        }
 
         int statusId = response == null
                 ? -1
                 : response.path("status_id").asInt(-1);
 
         if (statusId < 1) {
-            throw new IllegalStateException("Judge0 did not return a valid submission status.");
+            throw new IllegalStateException(
+                    "Judge0 did not return a valid submission status."
+            );
         }
 
         return new Judge0SubmissionStatus(statusId);
     }
-    
+
     // browser request rule
     public Judge0SubmissionStatus awaitSubmissionStatus(String token) {
         for (int attempt = 0; attempt < MAX_STATUS_CHECKS; attempt++) {

@@ -1,7 +1,30 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f7f3ff;
+  --color-brand-100: #ede6ff;
+  --color-brand-300: #c7a3ff;
+  --color-brand-500: #863bff;
+  --color-brand-600: #7024e8;
+  --color-brand-700: #5d1bc2;
+
+  --color-accent-400: #47bfff;
+
+  --color-ink-950: #08060d;
+  --color-ink-700: #3f3a4d;
+  --color-ink-500: #6b6578;
+
+  --color-canvas: #f8f7fc;
+  --color-surface: #ffffff;
+
+  --font-sans: Inter, "Segoe UI", Arial, sans-serif;
+  --font-mono: "Cascadia Code", Consolas, "Courier New", monospace;
+}
+
 :root {
-  font-family: Inter, system-ui, sans-serif;
-  color: #1f2937;
-  background: #f8fafc;
+  font-family: var(--font-sans);
+  color: var(--color-ink-950);
+  background: var(--color-canvas);
 }
 
 * {
@@ -9,5 +32,68 @@
 }
 
 body {
+  min-width: 20rem;
   margin: 0;
+}
+
+@layer base {
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  button,
+  input,
+  textarea {
+    font: inherit;
+  }
+}
+
+@utility primary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  border: 0;
+  border-radius: 0.5rem;
+  color: #ffffff;
+  background-color: var(--color-brand-500);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgb(8 6 13 / 12%);
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    box-shadow 150ms ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    background-color: var(--color-brand-600);
+    box-shadow: 0 6px 14px rgb(8 6 13 / 14%);
+  }
+
+  &:focus-visible {
+    outline: 3px solid var(--color-accent-400);
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.65;
+    transform: none;
+  }
 }

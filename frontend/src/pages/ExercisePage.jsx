@@ -4,6 +4,7 @@ import { getExerciseById, submitExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/ExercisePage.css";
 import LogoutButton from "../components/LogoutButton";
+import JavaCodeEditor from "../components/JavaCodeEditor";
 
 function ExercisePage({ authSession, onLogout }) {
   const { exerciseId } = useParams();
@@ -106,18 +107,23 @@ function ExercisePage({ authSession, onLogout }) {
           </section>
 
           <form className="editor-section" onSubmit={handleSubmit}>
-            <label htmlFor="source-code">Java source code</label>
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <label id="source-code-label">Java source code</label>
+              <p id="editor-keyboard-help" className="m-0 text-sm text-ink-500">
+                Tab indents. Press Escape, then Tab to leave the editor.
+              </p>
+            </div>
 
-            <textarea
-              id="source-code"
-              className="code-editor"
+            <JavaCodeEditor
+              ariaDescribedBy="editor-keyboard-help"
+              key={exercise.id}
               value={sourceCode}
-              onChange={(event) => {
-                setSourceCode(event.target.value);
+              onChange={(nextSourceCode) => {
+                setSourceCode(nextSourceCode);
                 setResult(null);
               }}
               maxLength={20000}
-              spellCheck="false"
+              ariaLabelledBy="source-code-label"
             />
 
             <p className="character-count">
@@ -125,7 +131,7 @@ function ExercisePage({ authSession, onLogout }) {
             </p>
 
             <button
-              className="submit-exercise-button"
+              className="primary-button justify-self-start"
               type="submit"
               disabled={isSubmitting || sourceCode.trim() === ""}>
               {isSubmitting ? "Checking solution…" : "Submit solution"}

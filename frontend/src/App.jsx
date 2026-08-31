@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { getCurrentUser } from "./api/auth";
 import DashboardPage from "./pages/DashboardPage";
-import ExercisePage from "./pages/ExercisePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 
 const AUTH_SESSION_STORAGE_KEY = "codeCalibrate.authSession";
 
@@ -114,11 +114,17 @@ function App() {
             <DashboardPage authSession={authSession} onLogout={handleLogout} />
           }
         />
-
         <Route
           path="/exercises/:exerciseId"
           element={
-            <ExercisePage authSession={authSession} onLogout={handleLogout} />
+            <Suspense
+              fallback={
+                <main className="mx-auto min-h-screen w-full max-w-5xl px-6 py-12 md:py-16">
+                  <p className="text-ink-500">Loading code editor…</p>
+                </main>
+              }>
+              <ExercisePage authSession={authSession} onLogout={handleLogout} />
+            </Suspense>
           }
         />
       </Routes>

@@ -99,3 +99,44 @@ values
     (@variables_exercise_id, @variables_skill_id)
 on duplicate key update
     skill_id = VALUES(skill_id);
+
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-lasagna-001',
+        'Cook Your Lasagna',
+        'Complete four Java methods that calculate the expected oven time, remaining oven time, preparation time, and total working time for a lasagna.',
+        'Beginner',
+        'Exercism'
+    )
+    on duplicate key update
+                         title = VALUES(title),
+                         description = VALUES(description),
+                         difficulty = VALUES(difficulty);
+
+set
+@lasagna_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-lasagna-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@lasagna_exercise_id, @variables_skill_id),
+    (@lasagna_exercise_id, @methods_skill_id)
+    on duplicate key update
+                         skill_id = VALUES(skill_id);

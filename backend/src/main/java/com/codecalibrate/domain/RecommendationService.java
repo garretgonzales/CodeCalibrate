@@ -1,5 +1,6 @@
 package com.codecalibrate.domain;
 
+import com.codecalibrate.data.AttemptRepository;
 import com.codecalibrate.data.ExerciseRepository;
 import com.codecalibrate.data.UserMasteryRepository;
 import com.codecalibrate.models.Exercise;
@@ -13,24 +14,40 @@ public class RecommendationService {
 
   private final UserMasteryRepository userMasteryRepository;
   private final ExerciseRepository exerciseRepository;
+  private final AttemptRepository attemptRepository;
 
   public RecommendationService(
-      UserMasteryRepository userMasteryRepository, ExerciseRepository exerciseRepository) {
+      UserMasteryRepository userMasteryRepository,
+      ExerciseRepository exerciseRepository,
+      AttemptRepository attemptRepository) {
     this.userMasteryRepository = userMasteryRepository;
     this.exerciseRepository = exerciseRepository;
+    this.attemptRepository = attemptRepository;
   }
 
   public Exercise recommendNextExercise(User user) {
     List<UserMastery> masteries =
         userMasteryRepository.findByUserOrderByMasteryScoreAscLastPracticedAtAsc(user);
 
+    Exercise lowestMasteryExercise = null;
+
     for (UserMastery mastery : masteries) {
       List<Exercise> exercises =
           exerciseRepository.findBySkillsContainingOrderByIdAsc(mastery.getSkill());
 
-      if (!exercises.isEmpty()) {
-        return exercises.getFirst();
+      if (lowestMasteryExercise == null && !exercises.isEmpty()) {
+        lowestMasteryExercise = exercises.getFirst();
       }
+
+      for (Exercise exercise : exercises) {
+        if (!attemptRepository.existsByUserAndExercise(user, exercise)) {
+          return exercise;
+        }
+      }
+    }
+
+    if (lowestMasteryExercise != null) {
+      return lowestMasteryExercise;
     }
 
     return exerciseRepository

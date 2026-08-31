@@ -62,4 +62,14 @@ public class AttemptRepositoryPersistenceTest {
     assertThat(foundAttempt.isCorrect()).isTrue();
     assertThat(foundAttempt.getAttemptedAt()).isNotNull();
   }
+
+  @Test
+  void shouldReportWhetherUserAttemptedExercise() {
+    assertThat(attemptRepository.existsByUserAndExercise(user, exercise)).isFalse();
+
+    attemptRepository.saveAndFlush(new Attempt(user, exercise, false));
+
+    assertThat(attemptRepository.existsByUserAndExercise(user, exercise)).isTrue();
+  }
+
 }

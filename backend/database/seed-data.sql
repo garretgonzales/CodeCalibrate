@@ -99,3 +99,105 @@ values
     (@variables_exercise_id, @variables_skill_id)
 on duplicate key update
     skill_id = VALUES(skill_id);
+
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-lasagna-001',
+        'Cook Your Lasagna',
+        'Complete four Java methods that calculate the expected oven time, remaining oven time, preparation time, and total working time for a lasagna.',
+        'Beginner',
+        'Exercism'
+    )
+    on duplicate key update
+                         title = VALUES(title),
+                         description = VALUES(description),
+                         difficulty = VALUES(difficulty);
+
+set
+@lasagna_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-lasagna-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@lasagna_exercise_id, @variables_skill_id),
+    (@lasagna_exercise_id, @methods_skill_id)
+    on duplicate key update
+                         skill_id = VALUES(skill_id);
+
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-annalyns-infiltration-001',
+        'Annalyn''s Infiltration',
+        'Complete four boolean methods that determine which actions Annalyn can take based on whether the knight, archer, and prisoner are awake and whether her dog is present.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-blackjack-001',
+        'Blackjack',
+        'Implement card parsing and conditional decision methods that choose whether a Blackjack player should stand, hit, split, or automatically win.',
+        'Intermediate',
+        'Exercism'
+    )
+on duplicate key update
+                     title = VALUES(title),
+                     description = VALUES(description),
+                     difficulty = VALUES(difficulty);
+
+set
+    @annalyn_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-annalyns-infiltration-001'
+    );
+
+set
+    @blackjack_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-blackjack-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@annalyn_exercise_id, @control_flow_skill_id),
+    (@annalyn_exercise_id, @methods_skill_id),
+    (@blackjack_exercise_id, @control_flow_skill_id),
+    (@blackjack_exercise_id, @methods_skill_id)
+on duplicate key update
+    skill_id = VALUES(skill_id);

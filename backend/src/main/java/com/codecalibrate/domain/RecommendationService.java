@@ -29,13 +29,25 @@ public class RecommendationService {
     List<UserMastery> masteries =
         userMasteryRepository.findByUserOrderByMasteryScoreAscLastPracticedAtAsc(user);
 
+    Exercise lowestMasteryExercise = null;
+
     for (UserMastery mastery : masteries) {
       List<Exercise> exercises =
           exerciseRepository.findBySkillsContainingOrderByIdAsc(mastery.getSkill());
 
-      if (!exercises.isEmpty()) {
-        return exercises.getFirst();
+      if (lowestMasteryExercise == null && !exercises.isEmpty()) {
+        lowestMasteryExercise = exercises.getFirst();
       }
+
+      for (Exercise exercise : exercises) {
+        if (!attemptRepository.existsByUserAndExercise(user, exercise)) {
+          return exercise;
+        }
+      }
+    }
+
+    if (lowestMasteryExercise != null) {
+      return lowestMasteryExercise;
     }
 
     return exerciseRepository

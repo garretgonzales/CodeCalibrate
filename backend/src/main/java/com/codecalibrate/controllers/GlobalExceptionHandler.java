@@ -12,9 +12,19 @@ import com.codecalibrate.domain.ExerciseNotFoundException;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import com.codecalibrate.domain.Judge0UnavailableException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+
+    @ExceptionHandler(Judge0UnavailableException.class)
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public ApiErrorResponse handleJudge0UnavailableException(
+            Judge0UnavailableException exception
+    ) {
+        return new ApiErrorResponse(exception.getMessage(), Map.of());
+    }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

@@ -30,6 +30,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import com.codecalibrate.domain.Judge0UnavailableException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -252,4 +253,47 @@ public class ExerciseIntegrationTest {
         new ExerciseContentDefinition.Execution(
             "Main", 2, 128000, List.of(new ExerciseContentDefinition.TestCase("", "25\n"))));
   }
+
+  @Test
+  void shouldReturnServiceUnavailableWhenJudge0IsUnavailable() throws Exception {
+    when(gitHubExerciseContentClient.getExerciseContent(exercise.getExternalId()))
+            .thenReturn(executableContentDefinition());
+
+    when(judge0Client.createSubmission(
+            "public class Main {}",
+            "",
+            "25\n",
+            2,
+            128000
+    )).thenThrow(new Judge0UnavailableException(
+            new RuntimeException("private provider details")
+    ));
+
+    mockMvc.perform(
+                   post("/api/exercises/{id}/submissions", exercise.getId())
+                           .header(
+                                   HttpHeaders.AUTHORIZATION,
+                                   "Bearer " + token
+                           )
+                           .contentType(MediaType.APPLICATION_JSON)
+                           .content("""
+                                    {
+                                      "sourceCode": "public class Main {}"
+                                    }
+                                    """)
+           )
+           .andExpect(status().isServiceUnavailable())
+           .andExpect(jsonPath("$.message").value(
+                   "Exercise validation is temporarily unavailable. Please try again."
+           ))
+           .andExpect(jsonPath("$.message")
+                   .value(org.hamcrest.Matchers.not(
+                           containsString("private provider details")
+                   )))
+           .andExpect(jsonPath("$.errors").isEmpty());
+
+    assertThat(attemptRepository.count()).isZero();
+    assertThat(userMasteryRepository.count()).isZero();
+  }
+
 }

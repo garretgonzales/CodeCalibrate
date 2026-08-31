@@ -45,7 +45,11 @@ export async function submitExercise(exerciseId, sourceCode, token) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw createApiError(response, body, "Unable to load the exercise.");
+    throw createApiError(
+      response,
+      body,
+      "Unable to check the solution right now.",
+    );
   }
 
   return body;

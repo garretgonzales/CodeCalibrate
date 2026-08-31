@@ -1,5 +1,6 @@
 package com.codecalibrate.domain;
 
+import com.codecalibrate.data.AttemptRepository;
 import com.codecalibrate.data.ExerciseRepository;
 import com.codecalibrate.data.UserMasteryRepository;
 import com.codecalibrate.models.Exercise;
@@ -13,11 +14,15 @@ public class RecommendationService {
 
   private final UserMasteryRepository userMasteryRepository;
   private final ExerciseRepository exerciseRepository;
+  private final AttemptRepository attemptRepository;
 
   public RecommendationService(
-      UserMasteryRepository userMasteryRepository, ExerciseRepository exerciseRepository) {
+      UserMasteryRepository userMasteryRepository,
+      ExerciseRepository exerciseRepository,
+      AttemptRepository attemptRepository) {
     this.userMasteryRepository = userMasteryRepository;
     this.exerciseRepository = exerciseRepository;
+    this.attemptRepository = attemptRepository;
   }
 
   public Exercise recommendNextExercise(User user) {

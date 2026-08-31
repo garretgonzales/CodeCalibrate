@@ -6,6 +6,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.codecalibrate.data.AttemptRepository;
 import com.codecalibrate.data.ExerciseRepository;
 import com.codecalibrate.data.UserMasteryRepository;
 import com.codecalibrate.models.Exercise;
@@ -22,13 +23,16 @@ public class RecommendationServiceTest {
   private UserMasteryRepository userMasteryRepository;
   private ExerciseRepository exerciseRepository;
   private RecommendationService service;
+  private AttemptRepository attemptRepository;
 
   @BeforeEach
   void setUp() {
     userMasteryRepository = mock(UserMasteryRepository.class);
     exerciseRepository = mock(ExerciseRepository.class);
+    attemptRepository = mock(AttemptRepository.class);
 
-    service = new RecommendationService(userMasteryRepository, exerciseRepository);
+    service =
+        new RecommendationService(userMasteryRepository, exerciseRepository, attemptRepository);
   }
 
   @Test

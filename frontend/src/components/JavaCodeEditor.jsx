@@ -2,14 +2,16 @@ import { useEffect, useRef } from "react";
 import { java } from "@codemirror/lang-java";
 import { EditorState } from "@codemirror/state";
 import { EditorView, keymap } from "@codemirror/view";
+import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { tags } from "@lezer/highlight";
 import { basicSetup } from "codemirror";
 import { indentWithTab } from "@codemirror/commands";
 
 const editorTheme = EditorView.theme({
   "&": {
     minHeight: "24rem",
-    backgroundColor: "var(--color-surface)",
-    color: "var(--color-ink-950)",
+    backgroundColor: "var(--theme-editor-surface)",
+    color: "var(--theme-editor-foreground)",
     fontFamily: "var(--font-mono)",
     fontSize: "0.95rem",
   },
@@ -19,27 +21,53 @@ const editorTheme = EditorView.theme({
   ".cm-content": {
     minHeight: "24rem",
     padding: "1rem 0",
-    caretColor: "var(--color-brand-500)",
+    caretColor: "var(--theme-editor-caret)",
   },
   ".cm-line": {
     padding: "0 1rem",
   },
   ".cm-gutters": {
-    backgroundColor: "var(--color-brand-50)",
-    color: "var(--color-ink-500)",
-    borderRight: "1px solid var(--color-brand-100)",
+    backgroundColor: "var(--theme-editor-gutter)",
+    color: "var(--theme-editor-gutter-foreground)",
+    borderRight: "1px solid var(--theme-border)",
   },
   ".cm-activeLine": {
-    backgroundColor: "rgb(134 59 255 / 5%)",
+    backgroundColor: "var(--theme-editor-active-line)",
   },
   ".cm-activeLineGutter": {
-    backgroundColor: "rgb(134 59 255 / 10%)",
+    backgroundColor: "var(--theme-editor-active-line)",
+  },
+  ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection": {
+    backgroundColor: "var(--theme-editor-selection) !important",
+  },
+  ".cm-cursor, .cm-dropCursor": {
+    borderLeftColor: "var(--theme-editor-caret)",
+  },
+  ".cm-matchingBracket": {
+    color: "var(--theme-editor-foreground)",
+    backgroundColor: "var(--theme-editor-selection)",
+    outline: "1px solid var(--theme-editor-caret)",
+  },
+  ".cm-tooltip, .cm-panels": {
+    color: "var(--theme-editor-foreground)",
+    backgroundColor: "var(--theme-editor-tooltip)",
+    borderColor: "var(--theme-border-strong)",
   },
   "&.cm-focused": {
-    outline: "3px solid rgb(71 191 255 / 35%)",
+    outline: "3px solid var(--theme-editor-focus)",
     outlineOffset: "2px",
   },
 });
+
+const editorHighlightStyle = HighlightStyle.define([
+  { tag: [tags.keyword, tags.modifier], color: "var(--theme-editor-keyword)" },
+  { tag: [tags.string, tags.character], color: "var(--theme-editor-string)" },
+  { tag: [tags.number, tags.bool, tags.null], color: "var(--theme-editor-number)" },
+  { tag: [tags.typeName, tags.className], color: "var(--theme-editor-type)" },
+  { tag: [tags.comment, tags.meta], color: "var(--theme-editor-comment)" },
+  { tag: [tags.variableName, tags.propertyName], color: "var(--theme-editor-variable)" },
+  { tag: tags.invalid, color: "var(--theme-editor-invalid)", textDecoration: "underline" },
+]);
 
 function JavaCodeEditor({
   value,
@@ -78,6 +106,7 @@ function JavaCodeEditor({
           basicSetup,
           keymap.of([indentWithTab]),
           java(),
+          syntaxHighlighting(editorHighlightStyle),
           EditorView.lineWrapping,
           EditorState.changeFilter.of(
             (transaction) => transaction.newDoc.length <= maxLength,
@@ -124,7 +153,7 @@ function JavaCodeEditor({
 
   return (
     <div
-      className="overflow-hidden rounded-xl border border-brand-100 bg-white shadow-inner"
+      className="overflow-hidden rounded-xl border border-brand-100 bg-surface shadow-inner"
       ref={editorParentRef}
     />
   );

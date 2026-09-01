@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { getRecommendedExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/DashboardPage.css";
-import LogoutButton from "../components/LogoutButton";
 
 function DashboardPage({ authSession, onLogout }) {
   const [exercise, setExercise] = useState(null);
@@ -52,7 +51,7 @@ function DashboardPage({ authSession, onLogout }) {
   }, [authSession, onLogout]);
 
   if (!authSession) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -64,10 +63,9 @@ function DashboardPage({ authSession, onLogout }) {
         <p className="mt-2 text-base text-ink-500">
           Practice what you need. Build toward mastery.
         </p>
-        <LogoutButton onLogout={onLogout} />
       </header>
 
-      <section className="mb-4 rounded-2xl border border-brand-100 bg-linear-to-br from-white to-brand-50 p-6 shadow-xs">
+      <section className="mb-4 rounded-2xl border border-brand-100 bg-linear-to-br from-surface to-brand-50 p-6 shadow-xs">
         <h2 className="text-2xl font-bold text-ink-950">
           Welcome, {authSession.username}
         </h2>
@@ -85,7 +83,7 @@ function DashboardPage({ authSession, onLogout }) {
       )}
 
       {exercise && (
-        <section className="relative grid gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-white p-6 pl-7 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-brand-500">
+        <section className="relative grid gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-surface p-6 pl-7 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-brand-500">
           <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
             Recommended next exercise
           </h2>

@@ -4,6 +4,47 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (() => {
+        const storageKey = "codeCalibrate.themePreferences";
+        const palettes = new Set([
+          "calibration",
+          "aquamarine-bronze",
+          "midnight-mint",
+        ]);
+        const modes = new Set(["light", "dark"]);
+        let palette = "calibration";
+        let mode = "light";
+
+        try {
+          const storedValue = localStorage.getItem(storageKey);
+
+          if (storedValue) {
+            const preferences = JSON.parse(storedValue);
+
+            if (
+              preferences &&
+              typeof preferences === "object" &&
+              !Array.isArray(preferences) &&
+              palettes.has(preferences.palette) &&
+              modes.has(preferences.mode)
+            ) {
+              palette = preferences.palette;
+              mode = preferences.mode;
+            } else {
+              localStorage.removeItem(storageKey);
+            }
+          }
+        } catch {
+          palette = "calibration";
+          mode = "light";
+        }
+
+        document.documentElement.dataset.palette = palette;
+        document.documentElement.dataset.mode = mode;
+        document.documentElement.style.colorScheme = mode;
+      })();
+    </script>
     <title>frontend</title>
   </head>
   <body>

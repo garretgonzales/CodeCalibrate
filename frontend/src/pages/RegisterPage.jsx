@@ -28,7 +28,7 @@ function RegisterPage() {
         confirmPassword,
       });
 
-      navigate("/", {
+      navigate("/login", {
         replace: true,
         state: {
           message: "Account created successfully. You can now log in.",
@@ -121,7 +121,7 @@ function RegisterPage() {
         </form>
 
         <p>
-          Already registered? <Link to="/">Log in</Link>
+          Already registered? <Link to="/login">Log in</Link>
         </p>
       </section>
     </main>

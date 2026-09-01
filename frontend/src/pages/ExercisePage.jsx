@@ -3,7 +3,6 @@ import { Link, Navigate, useParams } from "react-router-dom";
 import { getExerciseById, submitExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/ExercisePage.css";
-import LogoutButton from "../components/LogoutButton";
 import JavaCodeEditor from "../components/JavaCodeEditor";
 
 function ExercisePage({ authSession, onLogout }) {
@@ -78,7 +77,7 @@ function ExercisePage({ authSession, onLogout }) {
   }
 
   if (!authSession) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -86,7 +85,6 @@ function ExercisePage({ authSession, onLogout }) {
       <header className="page-header">
         <Link to="/dashboard">← Dashboard</Link>
         <h1>{exercise?.title ?? "Exercise"}</h1>
-        <LogoutButton onLogout={onLogout} />
       </header>
 
       {isLoading && <p>Loading exercise…</p>}

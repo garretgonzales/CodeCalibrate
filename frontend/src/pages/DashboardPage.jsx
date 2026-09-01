@@ -3,7 +3,6 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { getRecommendedExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/DashboardPage.css";
-import LogoutButton from "../components/LogoutButton";
 
 function DashboardPage({ authSession, onLogout }) {
   const [exercise, setExercise] = useState(null);
@@ -52,7 +51,7 @@ function DashboardPage({ authSession, onLogout }) {
   }, [authSession, onLogout]);
 
   if (!authSession) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return (
@@ -64,7 +63,6 @@ function DashboardPage({ authSession, onLogout }) {
         <p className="mt-2 text-base text-ink-500">
           Practice what you need. Build toward mastery.
         </p>
-        <LogoutButton onLogout={onLogout} />
       </header>
 
       <section className="mb-4 rounded-2xl border border-brand-100 bg-linear-to-br from-white to-brand-50 p-6 shadow-xs">

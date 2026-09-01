@@ -2,7 +2,9 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { getCurrentUser } from "./api/auth";
+import SiteHeader from "./components/SiteHeader";
 import DashboardPage from "./pages/DashboardPage";
+import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
@@ -98,36 +100,47 @@ function App() {
     setAuthSession(null);
   }
 
-  if (isSessionChecking) {
-    return <p>Verifying session…</p>;
-  }
-
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
-        <Route path="/register" element={<RegisterPage />} />
+      <SiteHeader authSession={authSession} onLogout={handleLogout} />
 
-        <Route
-          path="/dashboard"
-          element={
-            <DashboardPage authSession={authSession} onLogout={handleLogout} />
-          }
-        />
-        <Route
-          path="/exercises/:exerciseId"
-          element={
-            <Suspense
-              fallback={
-                <main className="mx-auto min-h-screen w-full max-w-5xl px-6 py-12 md:py-16">
-                  <p className="text-ink-500">Loading code editor…</p>
-                </main>
-              }>
-              <ExercisePage authSession={authSession} onLogout={handleLogout} />
-            </Suspense>
-          }
-        />
-      </Routes>
+      {isSessionChecking ? (
+        <main className="mx-auto min-h-[calc(100vh-4.5rem)] w-full max-w-7xl px-6 py-12 lg:px-8">
+          <p className="font-mono text-sm text-ink-500">Verifying session…</p>
+        </main>
+      ) : (
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/register" element={<RegisterPage />} />
+
+          <Route
+            path="/dashboard"
+            element={
+              <DashboardPage
+                authSession={authSession}
+                onLogout={handleLogout}
+              />
+            }
+          />
+          <Route
+            path="/exercises/:exerciseId"
+            element={
+              <Suspense
+                fallback={
+                  <main className="mx-auto min-h-screen w-full max-w-5xl px-6 py-12 md:py-16">
+                    <p className="text-ink-500">Loading code editor…</p>
+                  </main>
+                }>
+                <ExercisePage
+                  authSession={authSession}
+                  onLogout={handleLogout}
+                />
+              </Suspense>
+            }
+          />
+        </Routes>
+      )}
     </BrowserRouter>
   );
 }

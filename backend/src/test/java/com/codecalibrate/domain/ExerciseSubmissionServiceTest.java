@@ -117,6 +117,7 @@ public class ExerciseSubmissionServiceTest {
         "Declare an int variable named age and print it.",
         "Beginner",
         "public class Main {}",
+        List.of(),
         new ExerciseContentDefinition.Execution("Main", 2, 128000, tests));
   }
 }

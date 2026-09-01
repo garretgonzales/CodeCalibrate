@@ -2,9 +2,10 @@
 .recommendation-card {
   max-width: 42rem;
   padding: 1.5rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--theme-border);
   border-radius: 0.75rem;
-  background: #ffffff;
+  color: var(--theme-foreground);
+  background: var(--theme-surface);
 }
 
 .recommendation-card {
@@ -21,7 +22,7 @@
 
 .skill-list {
   margin: 0;
-  color: #4b5563;
+  color: var(--theme-muted);
 }
 
 .start-exercise-button {

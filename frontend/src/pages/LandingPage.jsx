@@ -69,22 +69,22 @@ function LandingPage() {
           </div>
 
           <aside
-            className="landing-reveal calibration-panel relative border border-white/12 bg-ink-950 p-5 text-white shadow-[0_24px_70px_rgb(8_6_13_/_22%)] sm:p-7"
+            className="landing-reveal calibration-panel relative border border-inverse-border bg-inverse-surface p-5 text-inverse-foreground shadow-[0_24px_70px_color-mix(in_srgb,var(--theme-shadow)_22%,transparent)] sm:p-7"
             aria-label="Code Calibrate learning loop">
-            <div className="flex items-center justify-between border-b border-white/12 pb-4">
+            <div className="flex items-center justify-between border-b border-inverse-border pb-4">
               <div>
                 <p className="font-mono text-[0.68rem] font-bold tracking-[0.2em] text-accent-400">
                   CALIBRATION LOOP
                 </p>
-                <p className="mt-1 text-sm text-white/55">Java / Variables</p>
+                <p className="mt-1 text-sm text-inverse-muted">Java / Variables</p>
               </div>
-              <span className="flex items-center gap-2 font-mono text-xs text-white/65">
+              <span className="flex items-center gap-2 font-mono text-xs text-inverse-muted">
                 <span className="h-2 w-2 bg-accent-400 shadow-[0_0_12px_var(--color-accent-400)]" />
                 READY
               </span>
             </div>
 
-            <div className="mt-5 border-l-2 border-brand-500 bg-white/5 p-4 font-mono text-sm leading-7 text-white/88">
+            <div className="mt-5 border-l-2 border-brand-500 bg-inverse-overlay p-4 font-mono text-sm leading-7 text-inverse-foreground">
               <p>
                 <span className="text-brand-300">int</span> age = 25;
               </p>
@@ -102,7 +102,7 @@ function LandingPage() {
               <li className="calibration-row">
                 <span>02</span>
                 <strong>Trusted verdict</strong>
-                <small className="text-emerald-300!">accepted</small>
+                <small className="text-[var(--theme-success-border)]!">accepted</small>
               </li>
               <li className="calibration-row">
                 <span>03</span>
@@ -117,7 +117,7 @@ function LandingPage() {
             </ol>
 
             <div className="mt-6">
-              <div className="flex items-center justify-between font-mono text-[0.68rem] tracking-[0.14em] text-white/55">
+              <div className="flex items-center justify-between font-mono text-[0.68rem] tracking-[0.14em] text-inverse-muted">
                 <span>SKILL SIGNAL</span>
                 <span>CALIBRATING</span>
               </div>
@@ -125,7 +125,7 @@ function LandingPage() {
                 {[0, 1, 2, 3, 4, 5, 6, 7].map((segment) => (
                   <span
                     className={`h-1.5 ${
-                      segment < 5 ? "bg-brand-500" : "bg-white/14"
+                      segment < 5 ? "bg-brand-500" : "bg-inverse-overlay"
                     }`}
                     key={segment}
                   />
@@ -137,7 +137,7 @@ function LandingPage() {
       </section>
 
       <section
-        className="border-b border-brand-100 bg-white"
+        className="border-b border-brand-100 bg-surface"
         id="how-it-works"
         aria-labelledby="how-it-works-heading">
         <div className="mx-auto w-full max-w-7xl px-6 py-18 lg:px-8 lg:py-24">
@@ -220,7 +220,7 @@ function LandingPage() {
         </div>
       </section>
 
-      <section className="border-t border-brand-100 bg-ink-950 text-white">
+      <section className="border-t border-inverse-border bg-inverse-surface text-inverse-foreground">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-7 px-6 py-14 sm:flex-row sm:items-center sm:justify-between lg:px-8">
           <div className="max-w-2xl">
             <p className="font-mono text-xs font-bold tracking-[0.2em] text-accent-400">

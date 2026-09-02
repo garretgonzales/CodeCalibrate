@@ -1,41 +1,34 @@
 package com.codecalibrate.domain.content;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.util.List;
 
 /* backend representation of GitHub content file
 execution.tests has hidden validation details
  */
 
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record ExerciseContentDefinition(
-        String id,
-        Integer version,
-        String language,
-        String title,
-        String description,
-        String difficulty,
-        String starterCode,
-        Execution execution
-) {
+    String id,
+    Integer version,
+    String language,
+    String title,
+    String description,
+    String difficulty,
+    String starterCode,
+    List<DocumentationReference> references,
+    Execution execution) {
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record Execution(
-            String className,
-            Integer timeLimitSeconds,
-            Integer memoryLimitKilobytes,
-            List<TestCase> tests
-    ) {
-    }
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public record Execution(
+      String className,
+      Integer timeLimitSeconds,
+      Integer memoryLimitKilobytes,
+      List<TestCase> tests) {}
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record TestCase(
-            String stdin,
-            String expectedStdout
-    ) {
-    }
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public record DocumentationReference(String label, String description, String url) {}
+
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public record TestCase(String stdin, String expectedStdout) {}
 }
-

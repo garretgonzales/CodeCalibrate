@@ -1,5 +1,6 @@
 package com.codecalibrate.controllers;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.codecalibrate.data.*;
+import com.codecalibrate.domain.Judge0UnavailableException;
 import com.codecalibrate.domain.JwtService;
 import com.codecalibrate.domain.RecommendationService;
 import com.codecalibrate.domain.content.ExerciseContentDefinition;
@@ -30,7 +32,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import com.codecalibrate.domain.Judge0UnavailableException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -99,6 +100,16 @@ public class ExerciseIntegrationTest {
   }
 
   private ExerciseContentDefinition publicContentDefinition() {
+    return publicContentDefinition(
+        List.of(
+            new ExerciseContentDefinition.DocumentationReference(
+                "Java variables",
+                "Review Java variable types, naming, and initialization.",
+                "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html")));
+  }
+
+  private ExerciseContentDefinition publicContentDefinition(
+      List<ExerciseContentDefinition.DocumentationReference> references) {
     return new ExerciseContentDefinition(
         exercise.getExternalId(),
         1,
@@ -107,12 +118,13 @@ public class ExerciseIntegrationTest {
         "Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.",
         "Beginner",
         """
-                        public class Main {
-                            public static void main(String[] args) {
-                                // Write your code here...
+                            public class Main {
+                                public static void main(String[] args) {
+                                    // Write your code here...
+                                }
                             }
-                        }
-                        """,
+                            """,
+        references,
         null);
   }
 
@@ -128,6 +140,13 @@ public class ExerciseIntegrationTest {
         .andExpect(jsonPath("$.skills[0].name").value(skillName))
         .andExpect(jsonPath("$.expectedAnswer").doesNotExist())
         .andExpect(jsonPath("$.starterCode").value(containsString("public class Main")))
+        .andExpect(jsonPath("$.references[0].label").value("Java variables"))
+        .andExpect(
+            jsonPath("$.references[0].description")
+                .value("Review Java variable types, naming, and initialization."))
+        .andExpect(
+            jsonPath("$.references[0].url")
+                .value("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html"))
         .andExpect(jsonPath("$.execution").doesNotExist())
         .andExpect(jsonPath("$.tests").doesNotExist());
   }
@@ -250,6 +269,7 @@ public class ExerciseIntegrationTest {
         "Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.",
         "Beginner",
         "public class Main {}",
+        List.of(),
         new ExerciseContentDefinition.Execution(
             "Main", 2, 128000, List.of(new ExerciseContentDefinition.TestCase("", "25\n"))));
   }
@@ -257,43 +277,49 @@ public class ExerciseIntegrationTest {
   @Test
   void shouldReturnServiceUnavailableWhenJudge0IsUnavailable() throws Exception {
     when(gitHubExerciseContentClient.getExerciseContent(exercise.getExternalId()))
-            .thenReturn(executableContentDefinition());
+        .thenReturn(executableContentDefinition());
 
-    when(judge0Client.createSubmission(
-            "public class Main {}",
-            "",
-            "25\n",
-            2,
-            128000
-    )).thenThrow(new Judge0UnavailableException(
-            new RuntimeException("private provider details")
-    ));
+    when(judge0Client.createSubmission("public class Main {}", "", "25\n", 2, 128000))
+        .thenThrow(
+            new Judge0UnavailableException(new RuntimeException("private provider details")));
 
-    mockMvc.perform(
-                   post("/api/exercises/{id}/submissions", exercise.getId())
-                           .header(
-                                   HttpHeaders.AUTHORIZATION,
-                                   "Bearer " + token
-                           )
-                           .contentType(MediaType.APPLICATION_JSON)
-                           .content("""
+    mockMvc
+        .perform(
+            post("/api/exercises/{id}/submissions", exercise.getId())
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(
+                    """
                                     {
                                       "sourceCode": "public class Main {}"
                                     }
-                                    """)
-           )
-           .andExpect(status().isServiceUnavailable())
-           .andExpect(jsonPath("$.message").value(
-                   "Exercise validation is temporarily unavailable. Please try again."
-           ))
-           .andExpect(jsonPath("$.message")
-                   .value(org.hamcrest.Matchers.not(
-                           containsString("private provider details")
-                   )))
-           .andExpect(jsonPath("$.errors").isEmpty());
+                                    """))
+        .andExpect(status().isServiceUnavailable())
+        .andExpect(
+            jsonPath("$.message")
+                .value("Exercise validation is temporarily unavailable. Please try again."))
+        .andExpect(
+            jsonPath("$.message")
+                .value(org.hamcrest.Matchers.not(containsString("private provider details"))))
+        .andExpect(jsonPath("$.errors").isEmpty());
 
     assertThat(attemptRepository.count()).isZero();
     assertThat(userMasteryRepository.count()).isZero();
   }
 
+  @Test
+  void shouldRejectUnapprovedDocumentationReference() {
+    when(gitHubExerciseContentClient.getExerciseContent(exercise.getExternalId()))
+        .thenReturn(
+            publicContentDefinition(
+                List.of(
+                    new ExerciseContentDefinition.DocumentationReference(
+                        "Unapproved reference",
+                        "This host is not approved.",
+                        "https://example.com/java"))));
+
+    assertThatThrownBy(() -> mockMvc.perform(get("/api/exercises/{id}", exercise.getId())))
+        .hasRootCauseInstanceOf(IllegalStateException.class)
+        .hasRootCauseMessage("Exercise documentation reference is not approved.");
+  }
 }

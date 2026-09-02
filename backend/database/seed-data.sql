@@ -201,3 +201,65 @@ values
     (@blackjack_exercise_id, @methods_skill_id)
 on duplicate key update
     skill_id = VALUES(skill_id);
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-cars-assemble-001',
+        'Cars, Assemble!',
+        'Implement two Java methods that calculate an assembly line''s hourly production rate and its number of working cars produced per minute.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-salary-calculator-001',
+        'Salary Calculator',
+        'Implement four Java methods that apply attendance penalties, sales bonuses, and a maximum salary using ternary operators.',
+        'Intermediate',
+        'Exercism'
+    )
+on duplicate key update
+                     title = values(title),
+                     description = values(description),
+                     difficulty = values(difficulty);
+
+set
+    @cars_assemble_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-cars-assemble-001'
+    );
+
+set
+    @salary_calculator_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-salary-calculator-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@cars_assemble_exercise_id, @variables_skill_id),
+    (@cars_assemble_exercise_id, @control_flow_skill_id),
+    (@cars_assemble_exercise_id, @methods_skill_id),
+    (@salary_calculator_exercise_id, @variables_skill_id),
+    (@salary_calculator_exercise_id, @control_flow_skill_id),
+    (@salary_calculator_exercise_id, @methods_skill_id)
+on duplicate key update
+    skill_id = values(skill_id);

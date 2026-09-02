@@ -9,6 +9,12 @@ values ('Variables',
         'Beginner'),
        ('Methods',
         'Organize reusable behavior into methods.',
+        'Beginner'),
+       ('Arrays',
+        'Store and process fixed-size collections of values.',
+        'Beginner'),
+       ('Strings',
+        'Create, inspect, and transform sequences of characters.',
         'Beginner') as incoming
 on duplicate key update description = incoming.description,
                         difficulty  = incoming.difficulty;
@@ -45,10 +51,22 @@ set
                          from skills
                          where name = 'Methods');
 
+set
+    @arrays_skill_id = (select id
+                        from skills
+                        where name = 'Arrays');
+
+set
+    @strings_skill_id = (select id
+                         from skills
+                         where name = 'Strings');
+
 insert into learning_path_skills (learning_path_id, skill_id, sequence_order)
 values (@java_path_id, @variables_skill_id, 0),
        (@java_path_id, @control_flow_skill_id, 1),
-       (@java_path_id, @methods_skill_id, 2) as incoming
+       (@java_path_id, @methods_skill_id, 2),
+       (@java_path_id, @arrays_skill_id, 3),
+       (@java_path_id, @strings_skill_id, 4) as incoming
 on duplicate key update sequence_order = incoming.sequence_order;
 
 insert into
@@ -99,7 +117,6 @@ values
     (@variables_exercise_id, @variables_skill_id) as incoming
 on duplicate key update
     skill_id = incoming.skill_id;
-
 
 insert into
     exercises (
@@ -261,5 +278,66 @@ values
     (@salary_calculator_exercise_id, @variables_skill_id),
     (@salary_calculator_exercise_id, @control_flow_skill_id),
     (@salary_calculator_exercise_id, @methods_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-bird-watcher-001',
+        'Bird Watcher',
+        'Complete six Java methods that inspect, update, and summarize daily bird counts. getLastWeek returns 0, 2, 5, 3, 7, 8, 4. getToday returns the final count, incrementTodaysCount increases that count by one, hasDayWithoutBirds detects a zero, getCountForFirstDays totals the requested number of days without reading past the array, and getBusyDays counts days with at least five birds.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-log-levels-001',
+        'Log Levels',
+        'Process log lines formatted like [ERROR]: Invalid operation. message returns the trimmed text after the colon, logLevel returns the bracketed level in lowercase, and reformat returns the message followed by the lowercase level in parentheses, such as Invalid operation (error).',
+        'Beginner',
+        'Exercism'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @bird_watcher_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-bird-watcher-001'
+    );
+
+set
+    @log_levels_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-log-levels-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@bird_watcher_exercise_id, @arrays_skill_id),
+    (@bird_watcher_exercise_id, @control_flow_skill_id),
+    (@bird_watcher_exercise_id, @methods_skill_id),
+    (@log_levels_exercise_id, @strings_skill_id),
+    (@log_levels_exercise_id, @methods_skill_id) as incoming
 on duplicate key update
     skill_id = incoming.skill_id;

@@ -9,9 +9,9 @@ values ('Variables',
         'Beginner'),
        ('Methods',
         'Organize reusable behavior into methods.',
-        'Beginner')
-on duplicate key update description = VALUES(description),
-                        difficulty  = VALUES(difficulty);
+        'Beginner') as incoming
+on duplicate key update description = incoming.description,
+                        difficulty  = incoming.difficulty;
 
 insert into learning_paths (name, description, language)
 select 'Java',
@@ -48,8 +48,8 @@ set
 insert into learning_path_skills (learning_path_id, skill_id, sequence_order)
 values (@java_path_id, @variables_skill_id, 0),
        (@java_path_id, @control_flow_skill_id, 1),
-       (@java_path_id, @methods_skill_id, 2)
-on duplicate key update sequence_order = VALUES(sequence_order);
+       (@java_path_id, @methods_skill_id, 2) as incoming
+on duplicate key update sequence_order = incoming.sequence_order;
 
 insert into
     exercises (
@@ -66,11 +66,11 @@ values
         'Write a Java program that declares an int variable named age, assigns it the value 25, and prints it.',
         'Beginner',
         'CodeCalibrate'
-    )
+    ) as incoming
 on duplicate key update
-                     title = VALUES(title),
-                     description = VALUES(description),
-                     difficulty = VALUES(difficulty);
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
 
 set
     @variables_skill_id = (
@@ -96,9 +96,9 @@ set
 insert into
     exercise_skills (exercise_id, skill_id)
 values
-    (@variables_exercise_id, @variables_skill_id)
+    (@variables_exercise_id, @variables_skill_id) as incoming
 on duplicate key update
-    skill_id = VALUES(skill_id);
+    skill_id = incoming.skill_id;
 
 
 insert into
@@ -116,11 +116,11 @@ values
         'Complete four Java methods that calculate the expected oven time, remaining oven time, preparation time, and total working time for a lasagna.',
         'Beginner',
         'Exercism'
-    )
+    ) as incoming
     on duplicate key update
-                         title = VALUES(title),
-                         description = VALUES(description),
-                         difficulty = VALUES(difficulty);
+                         title = incoming.title,
+                         description = incoming.description,
+                         difficulty = incoming.difficulty;
 
 set
 @lasagna_exercise_id = (
@@ -137,9 +137,9 @@ insert into
     exercise_skills (exercise_id, skill_id)
 values
     (@lasagna_exercise_id, @variables_skill_id),
-    (@lasagna_exercise_id, @methods_skill_id)
+    (@lasagna_exercise_id, @methods_skill_id) as incoming
     on duplicate key update
-                         skill_id = VALUES(skill_id);
+                         skill_id = incoming.skill_id;
 
 
 insert into
@@ -164,11 +164,11 @@ values
         'Implement card parsing and conditional decision methods that choose whether a Blackjack player should stand, hit, split, or automatically win.',
         'Intermediate',
         'Exercism'
-    )
+    ) as incoming
 on duplicate key update
-                     title = VALUES(title),
-                     description = VALUES(description),
-                     difficulty = VALUES(difficulty);
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
 
 set
     @annalyn_exercise_id = (
@@ -198,9 +198,9 @@ values
     (@annalyn_exercise_id, @control_flow_skill_id),
     (@annalyn_exercise_id, @methods_skill_id),
     (@blackjack_exercise_id, @control_flow_skill_id),
-    (@blackjack_exercise_id, @methods_skill_id)
+    (@blackjack_exercise_id, @methods_skill_id) as incoming
 on duplicate key update
-    skill_id = VALUES(skill_id);
+    skill_id = incoming.skill_id;
 
 insert into
     exercises (
@@ -224,11 +224,11 @@ values
         'Implement four Java methods that apply attendance penalties, sales bonuses, and a maximum salary using ternary operators.',
         'Intermediate',
         'Exercism'
-    )
+    ) as incoming
 on duplicate key update
-                     title = values(title),
-                     description = values(description),
-                     difficulty = values(difficulty);
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
 
 set
     @cars_assemble_exercise_id = (
@@ -260,6 +260,6 @@ values
     (@cars_assemble_exercise_id, @methods_skill_id),
     (@salary_calculator_exercise_id, @variables_skill_id),
     (@salary_calculator_exercise_id, @control_flow_skill_id),
-    (@salary_calculator_exercise_id, @methods_skill_id)
+    (@salary_calculator_exercise_id, @methods_skill_id) as incoming
 on duplicate key update
-    skill_id = values(skill_id);
+    skill_id = incoming.skill_id;

@@ -105,7 +105,11 @@ public class ExerciseIntegrationTest {
             new ExerciseContentDefinition.DocumentationReference(
                 "Java variables",
                 "Review Java variable types, naming, and initialization.",
-                "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html")));
+                "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html"),
+            new ExerciseContentDefinition.DocumentationReference(
+                "Defining methods in Java",
+                "Review how Java methods declare parameters and return values.",
+                "https://dev.java/learn/classes-objects/defining-methods/")));
   }
 
   private ExerciseContentDefinition publicContentDefinition(
@@ -147,6 +151,13 @@ public class ExerciseIntegrationTest {
         .andExpect(
             jsonPath("$.references[0].url")
                 .value("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/variables.html"))
+        .andExpect(jsonPath("$.references[1].label").value("Defining methods in Java"))
+        .andExpect(
+            jsonPath("$.references[1].description")
+                .value("Review how Java methods declare parameters and return values."))
+        .andExpect(
+            jsonPath("$.references[1].url")
+                .value("https://dev.java/learn/classes-objects/defining-methods/"))
         .andExpect(jsonPath("$.execution").doesNotExist())
         .andExpect(jsonPath("$.tests").doesNotExist());
   }

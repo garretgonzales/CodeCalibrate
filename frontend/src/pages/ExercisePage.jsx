@@ -4,6 +4,7 @@ import { getExerciseById, submitExercise } from "../api/exercises";
 import "../style/AppLayout.css";
 import "../style/ExercisePage.css";
 import JavaCodeEditor from "../components/JavaCodeEditor";
+import ExerciseReferences from "../components/ExerciseReferences";
 
 function ExercisePage({ authSession, onLogout }) {
   const { exerciseId } = useParams();
@@ -104,37 +105,43 @@ function ExercisePage({ authSession, onLogout }) {
             </p>
           </section>
 
-          <form className="editor-section" onSubmit={handleSubmit}>
-            <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <label id="source-code-label">Java source code</label>
-              <p id="editor-keyboard-help" className="m-0 text-sm text-ink-500">
-                Tab indents. Press Escape, then Tab to leave the editor.
+          <div className="exercise-workspace">
+            <form className="editor-section" onSubmit={handleSubmit}>
+              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                <label id="source-code-label">Java source code</label>
+                <p
+                  id="editor-keyboard-help"
+                  className="m-0 text-sm text-ink-500">
+                  Tab indents. Press Escape, then Tab to leave the editor.
+                </p>
+              </div>
+
+              <JavaCodeEditor
+                ariaDescribedBy="editor-keyboard-help"
+                key={exercise.id}
+                value={sourceCode}
+                onChange={(nextSourceCode) => {
+                  setSourceCode(nextSourceCode);
+                  setResult(null);
+                }}
+                maxLength={20000}
+                ariaLabelledBy="source-code-label"
+              />
+
+              <p className="character-count">
+                {sourceCode.length} / 20000 characters
               </p>
-            </div>
 
-            <JavaCodeEditor
-              ariaDescribedBy="editor-keyboard-help"
-              key={exercise.id}
-              value={sourceCode}
-              onChange={(nextSourceCode) => {
-                setSourceCode(nextSourceCode);
-                setResult(null);
-              }}
-              maxLength={20000}
-              ariaLabelledBy="source-code-label"
-            />
+              <button
+                className="primary-button justify-self-start"
+                type="submit"
+                disabled={isSubmitting || sourceCode.trim() === ""}>
+                {isSubmitting ? "Checking solution…" : "Submit solution"}
+              </button>
+            </form>
+            <ExerciseReferences references={exercise.references} />
+          </div>
 
-            <p className="character-count">
-              {sourceCode.length} / 20000 characters
-            </p>
-
-            <button
-              className="primary-button justify-self-start"
-              type="submit"
-              disabled={isSubmitting || sourceCode.trim() === ""}>
-              {isSubmitting ? "Checking solution…" : "Submit solution"}
-            </button>
-          </form>
           {result && (
             <section
               className={`result-card ${

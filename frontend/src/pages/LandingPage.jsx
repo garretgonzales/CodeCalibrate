@@ -36,7 +36,9 @@ const javaSkills = [
   },
 ];
 
-function LandingPage() {
+function LandingPage({ authSession }) {
+  const isAuthenticated = Boolean(authSession?.token);
+  const learningDestination = isAuthenticated ? "/dashboard" : "/register";
   return (
     <main>
       <section className="landing-grid relative overflow-hidden border-b border-brand-100 bg-canvas">
@@ -57,14 +59,19 @@ function LandingPage() {
             </p>
 
             <div className="mt-9 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-              <Link className="primary-button m-0 min-w-40" to="/register">
-                Start learning
-              </Link>
               <Link
-                className="rounded-sm font-semibold text-ink-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-700 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400"
-                to="/login">
-                I already have an account
+                className="primary-button m-0 min-w-40"
+                to={learningDestination}>
+                {isAuthenticated ? "Continue learning" : "Start learning"}
               </Link>
+
+              {!isAuthenticated && (
+                <Link
+                  className="rounded-sm font-semibold text-ink-700 underline decoration-brand-300 decoration-2 underline-offset-4 transition hover:text-brand-700 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400"
+                  to="/login">
+                  I already have an account
+                </Link>
+              )}
             </div>
           </div>
 
@@ -76,7 +83,9 @@ function LandingPage() {
                 <p className="font-mono text-[0.68rem] font-bold tracking-[0.2em] text-accent-400">
                   CALIBRATION LOOP
                 </p>
-                <p className="mt-1 text-sm text-inverse-muted">Java / Variables</p>
+                <p className="mt-1 text-sm text-inverse-muted">
+                  Java / Variables
+                </p>
               </div>
               <span className="flex items-center gap-2 font-mono text-xs text-inverse-muted">
                 <span className="h-2 w-2 bg-accent-400 shadow-[0_0_12px_var(--color-accent-400)]" />
@@ -89,7 +98,8 @@ function LandingPage() {
                 <span className="text-brand-300">int</span> age = 25;
               </p>
               <p>
-                System.out.println(<span className="text-accent-400">age</span>);
+                System.out.println(<span className="text-accent-400">age</span>
+                );
               </p>
             </div>
 
@@ -102,7 +112,9 @@ function LandingPage() {
               <li className="calibration-row">
                 <span>02</span>
                 <strong>Trusted verdict</strong>
-                <small className="text-[var(--theme-success-border)]!">accepted</small>
+                <small className="text-[var(--theme-success-border)]!">
+                  accepted
+                </small>
               </li>
               <li className="calibration-row">
                 <span>03</span>
@@ -230,8 +242,10 @@ function LandingPage() {
               Write Java. Get a trusted verdict. Keep moving.
             </h2>
           </div>
-          <Link className="primary-button m-0 shrink-0" to="/register">
-            Create account
+          <Link
+            className="primary-button m-0 shrink-0"
+            to={learningDestination}>
+            {isAuthenticated ? "Continue learning" : "Create account"}
           </Link>
         </div>
       </section>

@@ -110,12 +110,14 @@ function ExercisePage({ authSession, onLogout }) {
             <form className="editor-section" onSubmit={handleSubmit}>
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <label id="source-code-label">Java source code</label>
+
                 <p
                   id="editor-keyboard-help"
                   className="m-0 text-sm text-ink-500">
                   Tab indents. Press Escape, then Tab to leave the editor.
                 </p>
               </div>
+
               <JavaCodeEditor
                 ariaDescribedBy="editor-keyboard-help"
                 key={exercise.id}
@@ -127,12 +129,40 @@ function ExercisePage({ authSession, onLogout }) {
                 maxLength={20000}
                 ariaLabelledBy="source-code-label"
               />
+
               <p className="character-count">
                 {sourceCode.length} / 20000 characters
               </p>
+
               <div className="flex items-center justify-end gap-4">
                 <div className="min-w-0 flex-1">
-                  <VerdictLoader isVisible={isSubmitting} />
+                  {result ? (
+                    <section
+                      className={`grid min-h-14 gap-1 border border-l-[0.375rem] px-3 py-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-3 ${
+                        result.correct ? "result-correct" : "result-incorrect"
+                      }`}
+                      aria-live="polite">
+                      <h2 className="m-0 text-base">
+                        {result.correct ? "Correct!" : "Not quite yet"}
+                      </h2>
+
+                      <p className="m-0 text-sm">
+                        {result.correct
+                          ? "Your attempt was accepted and your mastery has been updated."
+                          : "Your attempt was not accepted. Review your code and try again."}
+                      </p>
+
+                      {result.correct && (
+                        <Link
+                          className="next-recommendation-link whitespace-nowrap text-sm"
+                          to="/dashboard">
+                          View next recommendation
+                        </Link>
+                      )}
+                    </section>
+                  ) : (
+                    <VerdictLoader isVisible={isSubmitting} />
+                  )}
                 </div>
 
                 <button
@@ -143,34 +173,12 @@ function ExercisePage({ authSession, onLogout }) {
                 </button>
               </div>
             </form>
+
             <ExerciseReferences references={exercise.references} />
           </div>
-
-          {result && (
-            <section
-              className={`result-card ${
-                result.correct ? "result-correct" : "result-incorrect"
-              }`}
-              aria-live="polite">
-              <h2>{result.correct ? "Correct!" : "Not quite yet"}</h2>
-
-              <p>
-                {result.correct
-                  ? "Your attempt was accepted and your mastery has been updated."
-                  : "Your attempt was not accepted. Review your code and try again."}
-              </p>
-
-              {result.correct && (
-                <Link className="next-recommendation-link" to="/dashboard">
-                  View next recommendation
-                </Link>
-              )}
-            </section>
-          )}
         </>
       )}
     </main>
   );
 }
-
 export default ExercisePage;

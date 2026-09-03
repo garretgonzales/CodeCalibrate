@@ -5,6 +5,7 @@ import "../style/AppLayout.css";
 import "../style/ExercisePage.css";
 import JavaCodeEditor from "../components/JavaCodeEditor";
 import ExerciseReferences from "../components/ExerciseReferences";
+import VerdictLoader from "../components/VerdictLoader";
 
 function ExercisePage({ authSession, onLogout }) {
   const { exerciseId } = useParams();
@@ -138,6 +139,7 @@ function ExercisePage({ authSession, onLogout }) {
                 disabled={isSubmitting || sourceCode.trim() === ""}>
                 {isSubmitting ? "Checking solution…" : "Submit solution"}
               </button>
+              {isSubmitting && <VerdictLoader />}
             </form>
             <ExerciseReferences references={exercise.references} />
           </div>

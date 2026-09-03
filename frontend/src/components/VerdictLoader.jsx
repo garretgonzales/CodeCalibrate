@@ -1,29 +1,35 @@
-function VerdictLoader() {
+function VerdictLoader({ isVisible }) {
   return (
     <div
-      className="border border-inverse-border bg-inverse-surface p-4 text-inverse-foreground shadow-[0_12px_30px_color-mix(in_srgb,var(--theme-shadow)_18%,transparent)]"
+      className="min-h-14 min-w-0"
       role="status"
       aria-live="polite"
       aria-atomic="true">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <p className="m-0 font-mono text-sm font-bold tracking-wide">
-          Calibrating solution
-        </p>
-
-        <span className="font-mono text-xs text-inverse-muted">
-          Judge0 evaluation
-        </span>
-      </div>
+      <span className="sr-only">
+        {isVisible
+          ? "Calibrating solution. Waiting for the Judge0 verdict."
+          : ""}
+      </span>
 
       <div
-        className="mt-3 h-2 overflow-hidden bg-inverse-overlay"
+        className={`px-1 py-2 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none ${
+          isVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+        }`}
         aria-hidden="true">
-        <span className="verdict-loader-progress block h-full w-2/5 bg-primary shadow-[0_0_14px_var(--color-primary)]" />
-      </div>
+        <div className="flex items-center justify-between gap-3 font-mono text-xs">
+          <span className="font-bold text-ink-700">Calibrating solution</span>
 
-      <p className="mb-0 mt-3 text-sm text-inverse-muted">
-        Running trusted tests and waiting for a verdict…
-      </p>
+          <span className="text-ink-500">Judge0 evaluation</span>
+        </div>
+
+        <div className="mt-2 h-2 overflow-hidden bg-inverse-overlay">
+          <span
+            className={`block h-full w-2/5 bg-primary shadow-[0_0_14px_var(--color-primary)] ${
+              isVisible ? "verdict-loader-progress" : ""
+            }`}
+          />
+        </div>
+      </div>
     </div>
   );
 }

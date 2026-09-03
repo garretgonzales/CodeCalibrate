@@ -116,7 +116,6 @@ function ExercisePage({ authSession, onLogout }) {
                   Tab indents. Press Escape, then Tab to leave the editor.
                 </p>
               </div>
-
               <JavaCodeEditor
                 ariaDescribedBy="editor-keyboard-help"
                 key={exercise.id}
@@ -128,18 +127,21 @@ function ExercisePage({ authSession, onLogout }) {
                 maxLength={20000}
                 ariaLabelledBy="source-code-label"
               />
-
               <p className="character-count">
                 {sourceCode.length} / 20000 characters
               </p>
+              <div className="flex items-center justify-end gap-4">
+                <div className="min-w-0 flex-1">
+                  <VerdictLoader isVisible={isSubmitting} />
+                </div>
 
-              <button
-                className="primary-button justify-self-start"
-                type="submit"
-                disabled={isSubmitting || sourceCode.trim() === ""}>
-                {isSubmitting ? "Checking solution…" : "Submit solution"}
-              </button>
-              {isSubmitting && <VerdictLoader />}
+                <button
+                  className="primary-button w-44 shrink-0"
+                  type="submit"
+                  disabled={isSubmitting || sourceCode.trim() === ""}>
+                  {isSubmitting ? "Checking solution…" : "Submit solution"}
+                </button>
+              </div>
             </form>
             <ExerciseReferences references={exercise.references} />
           </div>

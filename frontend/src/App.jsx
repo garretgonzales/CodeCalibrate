@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import { getCurrentUser } from "./api/auth";
 import SiteHeader from "./components/SiteHeader";
@@ -111,8 +111,27 @@ function App() {
       ) : (
         <Routes>
           <Route path="/" element={<LandingPage authSession={authSession} />} />
-          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
-          <Route path="/register" element={<RegisterPage />} />
+          <Route
+            path="/login"
+            element={
+              authSession ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <LoginPage onLogin={handleLogin} />
+              )
+            }
+          />
+
+          <Route
+            path="/register"
+            element={
+              authSession ? (
+                <Navigate to="/dashboard" replace />
+              ) : (
+                <RegisterPage />
+              )
+            }
+          />
 
           <Route
             path="/dashboard"

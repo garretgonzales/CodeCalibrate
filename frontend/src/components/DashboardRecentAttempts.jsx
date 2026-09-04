@@ -67,18 +67,17 @@ function DashboardRecentAttempts({ attempts }) {
                     {formatAttemptDate(attempt.attemptedAt)}
                   </time>
                 </div>
-
-                <div className="flex items-center gap-3">
+                <div className="relative h-8 w-28 shrink-0 overflow-hidden">
                   <span
                     className={
                       attempt.correct
-                        ? "rounded-full border border-(--theme-success-border) bg-(--theme-success-surface) px-3 py-1 text-xs font-semibold text-(--theme-success-foreground)"
-                        : "rounded-full border border-(--theme-warning-border) bg-(--theme-warning-surface) px-3 py-1 text-xs font-semibold text-(--theme-warning-foreground)"
+                        ? "absolute top-1/2 right-0 -translate-y-1/2 whitespace-nowrap rounded-full border border-(--theme-success-border) bg-(--theme-success-surface) px-3 py-1 text-xs font-semibold text-(--theme-success-foreground) transition-all duration-200 ease-out group-hover:-translate-x-2 group-hover:opacity-0 group-focus-visible:-translate-x-2 group-focus-visible:opacity-0 motion-reduce:transform-none motion-reduce:transition-none"
+                        : "absolute top-1/2 right-0 -translate-y-1/2 whitespace-nowrap rounded-full border border-(--theme-warning-border) bg-(--theme-warning-surface) px-3 py-1 text-xs font-semibold text-(--theme-warning-foreground) transition-all duration-200 ease-out group-hover:-translate-x-2 group-hover:opacity-0 group-focus-visible:-translate-x-2 group-focus-visible:opacity-0 motion-reduce:transform-none motion-reduce:transition-none"
                     }>
                     {attempt.correct ? "Accepted" : "Try again"}
                   </span>
 
-                  <span className="text-sm font-semibold text-brand-600">
+                  <span className="pointer-events-none absolute top-1/2 right-0 translate-x-4 -translate-y-1/2 whitespace-nowrap text-sm font-semibold text-brand-600 opacity-0 transition-all duration-200 ease-out group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 motion-reduce:transform-none motion-reduce:transition-none">
                     Revisit <span aria-hidden="true">→</span>
                   </span>
                 </div>

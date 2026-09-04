@@ -63,11 +63,11 @@ function DashboardPage({ authSession, onLogout }) {
 
   return (
     <main className="mx-auto min-h-screen w-full max-w-7xl px-6 py-12 md:py-16">
-      <section className="mb-4 rounded-2xl border border-brand-100 bg-linear-to-br from-surface to-brand-50 p-6 shadow-xs">
-        <h1 className="text-2xl font-bold text-ink-950">Welcome, {username}</h1>
-      </section>
-
-      {isLoading && <p>Loading your dashboard…</p>}
+      {isLoading && !dashboard && (
+        <p role="status" aria-live="polite">
+          Loading your dashboard…
+        </p>
+      )}
 
       {error && (
         <p className="form-error" role="alert">
@@ -76,51 +76,55 @@ function DashboardPage({ authSession, onLogout }) {
       )}
 
       {dashboard && (
-        <div className="mb-8">
-          <DashboardOverview overview={dashboard.overview} />
-        </div>
-      )}
+        <div className="landing-reveal">
+          <section className="mb-4 rounded-2xl border border-brand-100 bg-linear-to-br from-surface to-brand-50 p-6 shadow-xs">
+            <h1 className="text-2xl font-bold text-ink-950">
+              Welcome, {username}
+            </h1>
+          </section>
 
-      {dashboard && (
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]">
-          <DashboardMastery skills={dashboard.skillMastery} />
+          <div className="mb-8">
+            <DashboardOverview overview={dashboard.overview} />
+          </div>
 
-          {exercise && (
-            <section className="relative grid content-start gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-surface p-6 pl-7 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-brand-500">
-              <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
-                Recommended next exercise
-              </h2>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1.3fr)_minmax(18rem,0.7fr)]">
+            <DashboardMastery skills={dashboard.skillMastery} />
 
-              <h3 className="text-2xl font-bold text-ink-950">
-                {exercise.title}
-              </h3>
+            {exercise && (
+              <section className="relative grid content-start gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-surface p-6 pl-7 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-brand-500">
+                <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
+                  Recommended next exercise
+                </h2>
 
-              <p className="leading-7 text-ink-700">{exercise.description}</p>
+                <h3 className="text-2xl font-bold text-ink-950">
+                  {exercise.title}
+                </h3>
 
-              <p className="text-sm text-ink-700">
-                <strong>Difficulty:</strong> {exercise.difficulty}
-              </p>
+                <p className="leading-7 text-ink-700">{exercise.description}</p>
 
-              <p className="text-sm text-ink-500">
-                <strong>Skills:</strong> {exercise.skills.join(", ")}
-              </p>
+                <p className="text-sm text-ink-700">
+                  <strong>Difficulty:</strong> {exercise.difficulty}
+                </p>
 
-              <button
-                className="primary-button justify-self-start"
-                type="button"
-                onClick={() => navigate(`/exercises/${exercise.id}`)}>
-                Start exercise
-              </button>
-            </section>
-          )}
-        </div>
-      )}
+                <p className="text-sm text-ink-500">
+                  <strong>Skills:</strong> {exercise.skills.join(", ")}
+                </p>
 
-      {dashboard && (
-        <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(18rem,0.75fr)_minmax(0,1.25fr)]">
-          <DashboardRecentAttempts attempts={dashboard.recentAttempts} />
+                <button
+                  className="primary-button justify-self-start"
+                  type="button"
+                  onClick={() => navigate(`/exercises/${exercise.id}`)}>
+                  Start exercise
+                </button>
+              </section>
+            )}
+          </div>
 
-          <DashboardPathProgress paths={dashboard.pathProgress} />
+          <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(18rem,0.75fr)_minmax(0,1.25fr)]">
+            <DashboardRecentAttempts attempts={dashboard.recentAttempts} />
+
+            <DashboardPathProgress paths={dashboard.pathProgress} />
+          </div>
         </div>
       )}
     </main>

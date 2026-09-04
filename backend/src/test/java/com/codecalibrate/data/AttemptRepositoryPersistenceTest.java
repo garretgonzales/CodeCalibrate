@@ -8,6 +8,7 @@ import com.codecalibrate.models.User;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
@@ -122,25 +123,81 @@ public class AttemptRepositoryPersistenceTest {
   }
 
   @Test
-  void shouldReturnFiveMostRecentAttemptsWithExercisesLoaded() {
-    for (int index = 0; index < 6; index++) {
-      attemptRepository.save(new Attempt(user, exercise, index % 2 == 0));
+  void shouldReturnLatestAttemptForEveryDistinctExercise() {
+    String testId = UUID.randomUUID().toString();
+
+    List<Exercise> attemptedExercises = new ArrayList<>();
+    attemptedExercises.add(exercise);
+
+    for (int index = 1; index <= 6; index++) {
+      attemptedExercises.add(
+              exerciseRepository.save(
+                      new Exercise(
+                              "history-exercise-" + index + "-" + testId,
+                              "History Exercise " + index,
+                              "Temporary exercise used to test attempt history.",
+                              "Beginner",
+                              "CodeCalibrate")));
+    }
+
+    for (Exercise attemptedExercise : attemptedExercises) {
+      attemptRepository.save(new Attempt(user, attemptedExercise, false));
     }
 
     attemptRepository.flush();
+
+    Attempt latestRepeatedAttempt =
+            attemptRepository.saveAndFlush(new Attempt(user, exercise, true));
+
+    User anotherUser =
+            userRepository.save(
+                    new User(
+                            "history-other-" + testId,
+                            "history-other-" + testId + "@example.com",
+                            "not-a-real-password-hash"));
+
+    attemptRepository.saveAndFlush(new Attempt(anotherUser, exercise, false));
+
     entityManager.clear();
 
-    List<Attempt> recentAttempts = attemptRepository.findTop5ByUserOrderByAttemptedAtDesc(user);
+    List<Attempt> latestAttempts =
+            attemptRepository.findLatestForEachExerciseByUser(user);
 
     PersistenceUnitUtil persistenceUnitUtil =
-        entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
+            entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
 
-    assertThat(recentAttempts).hasSize(5);
-    assertThat(recentAttempts)
-        .extracting(Attempt::getAttemptedAt)
-        .isSortedAccordingTo(Comparator.reverseOrder());
-    assertThat(recentAttempts)
-        .allSatisfy(
-            attempt -> assertThat(persistenceUnitUtil.isLoaded(attempt, "exercise")).isTrue());
+    List<Integer> expectedExerciseIds =
+            attemptedExercises.stream()
+                              .map(Exercise::getId)
+                              .toList();
+
+    assertThat(latestAttempts).hasSize(7);
+
+    assertThat(latestAttempts)
+            .extracting(attempt -> attempt.getExercise().getId())
+            .doesNotHaveDuplicates()
+            .containsExactlyInAnyOrderElementsOf(expectedExerciseIds);
+
+    assertThat(latestAttempts)
+            .extracting(Attempt::getAttemptedAt)
+            .isSortedAccordingTo(Comparator.reverseOrder());
+
+    assertThat(latestAttempts)
+            .filteredOn(
+                    attempt ->
+                            attempt.getExercise().getId().equals(exercise.getId()))
+            .singleElement()
+            .satisfies(
+                    attempt -> {
+                      assertThat(attempt.getId()).isEqualTo(latestRepeatedAttempt.getId());
+                      assertThat(attempt.isCorrect()).isTrue();
+                    });
+
+    assertThat(latestAttempts)
+            .allSatisfy(
+                    attempt ->
+                            assertThat(
+                                    persistenceUnitUtil.isLoaded(attempt, "exercise"))
+                                    .isTrue());
   }
 }

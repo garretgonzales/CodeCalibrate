@@ -26,6 +26,27 @@ public interface AttemptRepository extends JpaRepository<Attempt, Integer> {
             """)
   List<Integer> findDistinctCorrectExerciseIdsByUser(@Param("user") User user);
 
+
   @EntityGraph(attributePaths = "exercise")
-  List<Attempt> findTop5ByUserOrderByAttemptedAtDesc(User user);
+  @Query(
+          """
+              select attempt
+              from Attempt attempt
+              where attempt.user = :user
+                and not exists (
+                    select newerAttempt.id
+                    from Attempt newerAttempt
+                    where newerAttempt.user = :user
+                      and newerAttempt.exercise = attempt.exercise
+                      and (
+                          newerAttempt.attemptedAt > attempt.attemptedAt
+                          or (
+                              newerAttempt.attemptedAt = attempt.attemptedAt
+                              and newerAttempt.id > attempt.id
+                          )
+                      )
+                )
+              order by attempt.attemptedAt desc, attempt.id desc
+              """)
+  List<Attempt> findLatestForEachExerciseByUser(@Param("user") User user);
 }

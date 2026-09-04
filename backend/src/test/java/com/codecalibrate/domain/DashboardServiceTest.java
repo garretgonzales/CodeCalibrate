@@ -66,7 +66,7 @@ public class DashboardServiceTest {
                 .thenReturn(List.of());
         when(attemptRepository.findDistinctCorrectExerciseIdsByUser(user))
                 .thenReturn(List.of());
-        when(attemptRepository.findTop5ByUserOrderByAttemptedAtDesc(user))
+        when(attemptRepository.findLatestForEachExerciseByUser(user))
                 .thenReturn(List.of());
         when(learningPathRepository.findAll()).thenReturn(List.of());
 
@@ -156,7 +156,7 @@ public class DashboardServiceTest {
                 .thenReturn(List.of(variablesMastery, methodsMastery));
         when(attemptRepository.findDistinctCorrectExerciseIdsByUser(user))
                 .thenReturn(List.of(10));
-        when(attemptRepository.findTop5ByUserOrderByAttemptedAtDesc(user))
+        when(attemptRepository.findLatestForEachExerciseByUser(user))
                 .thenReturn(List.of(recentAttempt));
         when(attemptRepository.countByUser(user)).thenReturn(3L);
         when(attemptRepository.countByUserAndCorrectTrue(user))

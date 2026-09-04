@@ -6,5 +6,6 @@ public record DashboardResponse(
     DashboardUserResponse user,
     DashboardOverviewResponse overview,
     DashboardExerciseSummaryResponse recommendedExercise,
-    List<DashboardPathSkillResponse> skillMastery,
+    List<DashboardSkillMasteryResponse> skillMastery,
+    List<DashboardAttemptResponse> recentAttempts,
     List<DashboardPathProgressResponse> pathProgress) {}

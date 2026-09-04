@@ -6,7 +6,10 @@ import com.codecalibrate.models.Attempt;
 import com.codecalibrate.models.Exercise;
 import com.codecalibrate.models.User;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceUnitUtil;
 import jakarta.transaction.Transactional;
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -72,4 +75,72 @@ public class AttemptRepositoryPersistenceTest {
     assertThat(attemptRepository.existsByUserAndExercise(user, exercise)).isTrue();
   }
 
+  @Test
+  void shouldCountOnlyTheRequestedUsersAttempts() {
+    String testId = UUID.randomUUID().toString();
+
+    User anotherUser =
+        userRepository.save(
+            new User(
+                "other-" + testId,
+                "other-attempt-user-" + testId + "@example.com",
+                "not-a-real-password-hash"));
+
+    attemptRepository.saveAllAndFlush(
+        List.of(
+            new Attempt(user, exercise, true),
+            new Attempt(user, exercise, true),
+            new Attempt(user, exercise, false),
+            new Attempt(anotherUser, exercise, true)));
+
+    assertThat(attemptRepository.countByUser(user)).isEqualTo(3);
+    assertThat(attemptRepository.countByUserAndCorrectTrue(user)).isEqualTo(2);
+  }
+
+  @Test
+  void shouldReturnDistinctCorrectExerciseIdsForTheRequestedUser() {
+    String testId = UUID.randomUUID().toString();
+
+    Exercise anotherExercise =
+        exerciseRepository.save(
+            new Exercise(
+                "another-attempt-exercise-" + testId,
+                "Another Attempt Test Exercise",
+                "Another temporary exercise used by this persistence test.",
+                "Beginner",
+                "CodeCalibrate"));
+
+    attemptRepository.saveAllAndFlush(
+        List.of(
+            new Attempt(user, exercise, true),
+            new Attempt(user, exercise, true),
+            new Attempt(user, anotherExercise, false),
+            new Attempt(user, anotherExercise, true)));
+
+    assertThat(attemptRepository.findDistinctCorrectExerciseIdsByUser(user))
+        .containsExactlyInAnyOrder(exercise.getId(), anotherExercise.getId());
+  }
+
+  @Test
+  void shouldReturnFiveMostRecentAttemptsWithExercisesLoaded() {
+    for (int index = 0; index < 6; index++) {
+      attemptRepository.save(new Attempt(user, exercise, index % 2 == 0));
+    }
+
+    attemptRepository.flush();
+    entityManager.clear();
+
+    List<Attempt> recentAttempts = attemptRepository.findTop5ByUserOrderByAttemptedAtDesc(user);
+
+    PersistenceUnitUtil persistenceUnitUtil =
+        entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
+
+    assertThat(recentAttempts).hasSize(5);
+    assertThat(recentAttempts)
+        .extracting(Attempt::getAttemptedAt)
+        .isSortedAccordingTo(Comparator.reverseOrder());
+    assertThat(recentAttempts)
+        .allSatisfy(
+            attempt -> assertThat(persistenceUnitUtil.isLoaded(attempt, "exercise")).isTrue());
+  }
 }

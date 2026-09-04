@@ -19,12 +19,16 @@ function DashboardOverview({ overview }) {
     },
     {
       label: "Accuracy",
-      value: `${overview.accuracy}%`,
+      value: overview.accuracy,
+      decimals: 2,
+      suffix: "%",
       description: "Correct across all attempts",
     },
     {
       label: "Mastery",
-      value: `${overview.averageMastery}%`,
+      value: overview.averageMastery,
+      decimals: 2,
+      suffix: "%",
       description: "Across practiced skills",
     },
   ];
@@ -48,6 +52,8 @@ function DashboardOverview({ overview }) {
         {metrics.map((metric) => (
           <DashboardStatCard
             key={metric.label}
+            decimals={metric.decimals}
+            suffix={metric.suffix}
             label={metric.label}
             value={metric.value}
             description={metric.description}

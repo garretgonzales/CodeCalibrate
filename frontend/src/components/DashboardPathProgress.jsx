@@ -1,3 +1,5 @@
+import AnimatedNumber from "./NumberAnimation";
+
 function calculateProgress(completed, total) {
   if (total === 0) {
     return 0;
@@ -44,13 +46,16 @@ function DashboardPathProgress({ paths }) {
                     <h3 className="font-semibold text-ink-950">{path.name}</h3>
 
                     <p className="mt-1 text-sm text-ink-500">
-                      {path.language} · {path.completedExercises} of{" "}
-                      {path.totalExercises} exercises completed
+                      {path.language} ·{" "}
+                      <AnimatedNumber value={path.completedExercises} />
+                      {" of "}
+                      <AnimatedNumber value={path.totalExercises} />
+                      {" exercises completed"}
                     </p>
                   </div>
 
                   <p className="font-mono font-bold text-brand-600">
-                    {progress}%
+                    <AnimatedNumber value={progress} suffix="%" />
                   </p>
                 </div>
 
@@ -78,13 +83,19 @@ function DashboardPathProgress({ paths }) {
                         </p>
 
                         <p className="mt-1 text-ink-500">
-                          {skill.completedExercises} of {skill.totalExercises}{" "}
-                          exercises
+                          <AnimatedNumber value={skill.completedExercises} />
+                          {" of "}
+                          <AnimatedNumber value={skill.totalExercises} />
+                          {" exercises"}
                         </p>
                       </div>
 
                       <p className="font-mono text-ink-700">
-                        {Number(skill.masteryScore)}%
+                        <AnimatedNumber
+                          value={skill.masteryScore}
+                          decimals={2}
+                          suffix="%"
+                        />
                       </p>
                     </li>
                   ))}

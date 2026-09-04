@@ -1,3 +1,5 @@
+import AnimatedNumber from "./NumberAnimation";
+
 function DashboardMastery({ skills }) {
   return (
     <section
@@ -34,13 +36,18 @@ function DashboardMastery({ skills }) {
                     <h3 className="font-semibold text-ink-950">{skill.name}</h3>
 
                     <p className="mt-1 text-sm text-ink-500">
-                      {skill.questionsCorrect} correct of{" "}
-                      {skill.questionsAttempted} attempted
+                      <AnimatedNumber value={skill.questionsCorrect} /> correct
+                      of <AnimatedNumber value={skill.questionsAttempted} />{" "}
+                      attempted
                     </p>
                   </div>
 
                   <p className="font-mono text-lg font-bold text-brand-600">
-                    {masteryScore}%
+                    <AnimatedNumber
+                      value={masteryScore}
+                      decimals={2}
+                      suffix="%"
+                    />
                   </p>
                 </div>
 

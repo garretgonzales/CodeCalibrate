@@ -61,8 +61,8 @@ function DashboardRecentAttempts({ attempts }) {
               <span
                 className={
                   attempt.correct
-                    ? "rounded-full border border-[var(--theme-success-border)] bg-[var(--theme-success-surface)] px-3 py-1 text-xs font-semibold text-[var(--theme-success-foreground)]"
-                    : "rounded-full border border-[var(--theme-warning-border)] bg-[var(--theme-warning-surface)] px-3 py-1 text-xs font-semibold text-[var(--theme-warning-foreground)]"
+                    ? "rounded-full border border-(--theme-success-border) bg-(--theme-success-surface) px-3 py-1 text-xs font-semibold text-(--theme-success-foreground)"
+                    : "rounded-full border border-(--theme-warning-border) bg-(--theme-warning-surface) px-3 py-1 text-xs font-semibold text-(--theme-warning-foreground)"
                 }>
                 {attempt.correct ? "Accepted" : "Try again"}
               </span>

@@ -37,7 +37,7 @@ function ThemeControls() {
     <details className="theme-controls relative shrink-0" ref={detailsRef}>
       <summary className="theme-trigger inline-flex min-h-10 cursor-pointer list-none items-center justify-center gap-2 border border-inverse-border bg-transparent px-3 py-2 text-sm font-semibold text-inverse-foreground transition hover:bg-inverse-overlay focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 [&::-webkit-details-marker]:hidden">
         <span aria-hidden="true">◐</span>
-        <span>Theme</span>
+        <span className="sr-only sm:not-sr-only">Theme</span>
       </summary>
 
       <div className="theme-panel absolute right-0 z-50 mt-3 w-64 border border-strong bg-surface p-4 text-ink-950 shadow-xl">

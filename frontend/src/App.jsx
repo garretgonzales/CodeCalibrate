@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import { getCurrentUser } from "./api/auth";
 import SiteHeader from "./components/SiteHeader";
@@ -7,6 +7,8 @@ import DashboardPage from "./pages/DashboardPage";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import ResourcesPage from "./pages/ResourcesPage";
+
 const ExercisePage = lazy(() => import("./pages/ExercisePage"));
 
 const AUTH_SESSION_STORAGE_KEY = "codeCalibrate.authSession";
@@ -106,11 +108,15 @@ function App() {
 
       {isSessionChecking ? (
         <main className="mx-auto min-h-[calc(100vh-4.5rem)] w-full max-w-7xl px-6 py-12 lg:px-8">
-          <p className="font-mono text-sm text-ink-500">Verifying session…</p>
+          <p className="font-mono text-sm text-ink-500">
+            Verifying session…
+          </p>
         </main>
       ) : (
         <Routes>
           <Route path="/" element={<LandingPage authSession={authSession} />} />
+          <Route path="/resources" element={<ResourcesPage />} />
+
           <Route
             path="/login"
             element={
@@ -142,6 +148,7 @@ function App() {
               />
             }
           />
+
           <Route
             path="/exercises/:exerciseId"
             element={

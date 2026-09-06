@@ -17,6 +17,7 @@ function SiteHeader({ authSession, onLogout }) {
             aria-hidden="true"
             dangerouslySetInnerHTML={{ __html: iconMarkup }}
           />
+
           <img
             className="h-auto w-20 sm:w-52"
             src={wordmark}
@@ -34,6 +35,13 @@ function SiteHeader({ authSession, onLogout }) {
                 to="/dashboard">
                 Dashboard
               </Link>
+
+              <Link
+                className="hidden rounded-sm px-1 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex sm:px-2"
+                to="/resources">
+                Resources
+              </Link>
+
               <button
                 className="inline-flex min-h-10 items-center justify-center border border-inverse-border bg-transparent px-3 py-2 text-sm font-semibold text-inverse-foreground transition hover:border-inverse-muted hover:bg-inverse-overlay focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:px-4"
                 type="button"
@@ -48,16 +56,25 @@ function SiteHeader({ authSession, onLogout }) {
                 href="/#how-it-works">
                 How it works
               </a>
+
               <a
                 className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
                 href="/#java-path">
                 Java path
               </a>
+
+              <Link
+                className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
+                to="/resources">
+                Resources
+              </Link>
+
               <Link
                 className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex"
                 to="/login">
                 Log in
               </Link>
+
               <Link
                 className="inline-flex min-h-10 items-center justify-center bg-primary px-3 py-2 text-sm font-semibold text-primary-contrast shadow-sm transition hover:bg-primary-hover focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:px-4"
                 to="/register">

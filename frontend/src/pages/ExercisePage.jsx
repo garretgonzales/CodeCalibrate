@@ -6,6 +6,11 @@ import "../style/ExercisePage.css";
 import JavaCodeEditor from "../components/JavaCodeEditor";
 import ExerciseReferences from "../components/ExerciseReferences";
 import VerdictLoader from "../components/VerdictLoader";
+import {
+  readEditorPreferences,
+  storeEditorPreferences,
+} from "../editor/editorPreferences";
+
 
 function ExercisePage({ authSession, onLogout }) {
   const { exerciseId } = useParams();
@@ -15,6 +20,9 @@ function ExercisePage({ authSession, onLogout }) {
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+const [autocompleteEnabled, setAutocompleteEnabled] = useState(
+  () => readEditorPreferences().autocompleteEnabled,
+);
 
   useEffect(() => {
     if (!authSession) {
@@ -111,11 +119,30 @@ function ExercisePage({ authSession, onLogout }) {
               <div className="flex flex-wrap items-baseline justify-between gap-2">
                 <label id="source-code-label">Java source code</label>
 
-                <p
-                  id="editor-keyboard-help"
-                  className="m-0 text-sm text-ink-500">
-                  Tab indents. Press Escape, then Tab to leave the editor.
-                </p>
+                <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+                  <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-ink-500">
+                    <input
+                      type="checkbox"
+                      checked={autocompleteEnabled}
+                      onChange={(event) => {
+  const nextAutocompleteEnabled = event.target.checked;
+
+  setAutocompleteEnabled(nextAutocompleteEnabled);
+  storeEditorPreferences({
+    autocompleteEnabled: nextAutocompleteEnabled,
+  });
+}}
+                      className="h-4 w-4 accent-brand-500"
+                    />
+                    Code suggestions
+                  </label>
+
+                  <p
+                    id="editor-keyboard-help"
+                    className="m-0 text-sm text-ink-500">
+                    Tab indents. Press Escape, then Tab to leave the editor.
+                  </p>
+                </div>
               </div>
 
               <JavaCodeEditor
@@ -128,6 +155,7 @@ function ExercisePage({ authSession, onLogout }) {
                 }}
                 maxLength={20000}
                 ariaLabelledBy="source-code-label"
+                autocompleteEnabled={autocompleteEnabled}
               />
 
               <p className="character-count">
@@ -181,4 +209,5 @@ function ExercisePage({ authSession, onLogout }) {
     </main>
   );
 }
+
 export default ExercisePage;

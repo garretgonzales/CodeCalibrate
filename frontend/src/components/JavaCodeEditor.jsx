@@ -1,11 +1,13 @@
-import { useEffect, useRef } from "react";
-import { java } from "@codemirror/lang-java";
-import { EditorState } from "@codemirror/state";
-import { EditorView, keymap } from "@codemirror/view";
+import { useEffect, useRef, useState } from "react";
+import { indentWithTab } from "@codemirror/commands";
+import { java, javaLanguage } from "@codemirror/lang-java";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
+import { Compartment, EditorState } from "@codemirror/state";
+import { EditorView, keymap } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import { basicSetup } from "codemirror";
-import { indentWithTab } from "@codemirror/commands";
+
+import { javaCompletionSource } from "../editor/javaCompletions";
 
 const editorTheme = EditorView.theme({
   "&": {
@@ -37,9 +39,10 @@ const editorTheme = EditorView.theme({
   ".cm-activeLineGutter": {
     backgroundColor: "var(--theme-editor-active-line)",
   },
-  ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection": {
-    backgroundColor: "var(--theme-editor-selection) !important",
-  },
+  ".cm-selectionBackground, &.cm-focused .cm-selectionBackground, ::selection":
+    {
+      backgroundColor: "var(--theme-editor-selection) !important",
+    },
   ".cm-cursor, .cm-dropCursor": {
     borderLeftColor: "var(--theme-editor-caret)",
   },
@@ -60,14 +63,46 @@ const editorTheme = EditorView.theme({
 });
 
 const editorHighlightStyle = HighlightStyle.define([
-  { tag: [tags.keyword, tags.modifier], color: "var(--theme-editor-keyword)" },
-  { tag: [tags.string, tags.character], color: "var(--theme-editor-string)" },
-  { tag: [tags.number, tags.bool, tags.null], color: "var(--theme-editor-number)" },
-  { tag: [tags.typeName, tags.className], color: "var(--theme-editor-type)" },
-  { tag: [tags.comment, tags.meta], color: "var(--theme-editor-comment)" },
-  { tag: [tags.variableName, tags.propertyName], color: "var(--theme-editor-variable)" },
-  { tag: tags.invalid, color: "var(--theme-editor-invalid)", textDecoration: "underline" },
+  {
+    tag: [tags.keyword, tags.modifier],
+    color: "var(--theme-editor-keyword)",
+  },
+  {
+    tag: [tags.string, tags.character],
+    color: "var(--theme-editor-string)",
+  },
+  {
+    tag: [tags.number, tags.bool, tags.null],
+    color: "var(--theme-editor-number)",
+  },
+  {
+    tag: [tags.typeName, tags.className],
+    color: "var(--theme-editor-type)",
+  },
+  {
+    tag: [tags.comment, tags.meta],
+    color: "var(--theme-editor-comment)",
+  },
+  {
+    tag: [tags.variableName, tags.propertyName],
+    color: "var(--theme-editor-variable)",
+  },
+  {
+    tag: tags.invalid,
+    color: "var(--theme-editor-invalid)",
+    textDecoration: "underline",
+  },
 ]);
+
+function getAutocompleteExtension(autocompleteEnabled) {
+  if (!autocompleteEnabled) {
+    return [];
+  }
+
+  return javaLanguage.data.of({
+    autocomplete: javaCompletionSource,
+  });
+}
 
 function JavaCodeEditor({
   value,
@@ -76,11 +111,13 @@ function JavaCodeEditor({
   ariaLabel = "Java source code",
   ariaLabelledBy,
   ariaDescribedBy,
+  autocompleteEnabled = true,
 }) {
   const editorParentRef = useRef(null);
   const editorViewRef = useRef(null);
   const initialValueRef = useRef(value);
   const onChangeRef = useRef(onChange);
+  const [autocompleteCompartment] = useState(() => new Compartment());
 
   useEffect(() => {
     onChangeRef.current = onChange;
@@ -108,6 +145,7 @@ function JavaCodeEditor({
           java(),
           syntaxHighlighting(editorHighlightStyle),
           EditorView.lineWrapping,
+          autocompleteCompartment.of([]),
           EditorState.changeFilter.of(
             (transaction) => transaction.newDoc.length <= maxLength,
           ),
@@ -129,7 +167,27 @@ function JavaCodeEditor({
       view.destroy();
       editorViewRef.current = null;
     };
-  }, [ariaDescribedBy, ariaLabel, ariaLabelledBy, maxLength]);
+  }, [
+    ariaDescribedBy,
+    ariaLabel,
+    ariaLabelledBy,
+    autocompleteCompartment,
+    maxLength,
+  ]);
+
+  useEffect(() => {
+    const view = editorViewRef.current;
+
+    if (!view) {
+      return;
+    }
+
+    view.dispatch({
+      effects: autocompleteCompartment.reconfigure(
+        getAutocompleteExtension(autocompleteEnabled),
+      ),
+    });
+  }, [autocompleteCompartment, autocompleteEnabled]);
 
   useEffect(() => {
     const view = editorViewRef.current;

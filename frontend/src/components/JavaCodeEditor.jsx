@@ -211,7 +211,7 @@ function JavaCodeEditor({
 
   return (
     <div
-      className="overflow-hidden rounded-xl border border-brand-100 bg-surface shadow-inner"
+      className="code-editor-shell overflow-hidden rounded-xl border border-brand-100 bg-surface shadow-inner"
       ref={editorParentRef}
     />
   );

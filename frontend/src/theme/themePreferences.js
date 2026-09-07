@@ -4,6 +4,7 @@ export const THEME_PALETTES = Object.freeze([
   Object.freeze({ value: "calibration", label: "Calibration" }),
   Object.freeze({ value: "aquamarine-bronze", label: "Aquamarine Bronze" }),
   Object.freeze({ value: "midnight-mint", label: "Midnight Mint" }),
+  Object.freeze({ value: "tech-stack", label: "Tech Stack" }),
 ]);
 
 export const THEME_MODES = Object.freeze([

@@ -108,7 +108,7 @@ function App() {
 
       {isSessionChecking ? (
         <main className="mx-auto min-h-[calc(100vh-4.5rem)] w-full max-w-7xl px-6 py-12 lg:px-8">
-          <p className="font-mono text-sm text-ink-500">
+          <p className="text-sm text-ink-500">
             Verifying session…
           </p>
         </main>

@@ -39,12 +39,12 @@ function DashboardOverview({ overview }) {
       className="grid gap-4">
       <div>
         <p className="text-brand-600 text-xs font-semibold uppercase tracking-[0.18em]">
-          Learning snapshot
+          Overview
         </p>
         <h2
           id="dashboard-overview-heading"
           className="text-ink-950 mt-2 text-2xl font-bold">
-          Your progress at a glance
+          Your progress
         </h2>
       </div>
 

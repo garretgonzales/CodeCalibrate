@@ -93,7 +93,7 @@ function DashboardPage({ authSession, onLogout }) {
             {exercise && (
               <section className="relative grid content-start gap-4 overflow-hidden rounded-2xl border border-brand-100 bg-surface p-6 pl-7 shadow-sm before:absolute before:inset-y-0 before:left-0 before:w-1 before:bg-brand-500">
                 <h2 className="text-sm font-semibold uppercase tracking-[0.16em] text-brand-600">
-                  Recommended next exercise
+                  Practice next
                 </h2>
 
                 <h3 className="text-2xl font-bold text-ink-950">

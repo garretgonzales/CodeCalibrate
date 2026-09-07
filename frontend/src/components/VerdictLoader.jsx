@@ -7,7 +7,7 @@ function VerdictLoader({ isVisible }) {
       aria-atomic="true">
       <span className="sr-only">
         {isVisible
-          ? "Calibrating solution. Waiting for the Judge0 verdict."
+          ? "Checking solution. Waiting for the Judge0 result."
           : ""}
       </span>
 
@@ -16,10 +16,10 @@ function VerdictLoader({ isVisible }) {
           isVisible ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
         }`}
         aria-hidden="true">
-        <div className="flex items-center justify-between gap-3 font-mono text-xs">
-          <span className="font-bold text-ink-700">Calibrating solution</span>
+        <div className="flex items-center justify-between gap-3 text-xs">
+          <span className="font-bold text-ink-700">Checking solution</span>
 
-          <span className="text-ink-500">Judge0 evaluation</span>
+          <span className="text-ink-500">Running Java checks</span>
         </div>
 
         <div className="mt-2 h-2 overflow-hidden bg-inverse-overlay">

@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient closely mimicking the original image -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#141416" />
+      <stop offset="65%" stop-color="#191B1F" />
+      <stop offset="100%" stop-color="#222831" />
+    </linearGradient>
+
+    <!-- Aurora Wave Gradient Left (Purple/Indigo) -->
+    <linearGradient id="purpleGlow" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4D1A70" stop-opacity="0.95" />
+      <stop offset="50%" stop-color="#2D1B4E" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#141416" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Aurora Wave Gradient Right (Teal/Cyan) -->
+    <linearGradient id="tealGlow" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#1E6B65" stop-opacity="0.9" />
+      <stop offset="40%" stop-color="#154B4B" stop-opacity="0.7" />
+      <stop offset="75%" stop-color="#18353B" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#141416" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Clip Path to keep everything perfectly inside the rounded square canvas -->
+    <clipPath id="containerClip">
+      <rect x="0" y="0" width="500" height="500" rx="110" ry="110" />
+    </clipPath>
+  </defs>
+
+  <!-- Group with clipping applied to prevent any bleeding of background elements -->
+  <g clip-path="url(#containerClip)">
+    <!-- Base Background Layer -->
+    <rect width="500" height="500" fill="url(#bgGrad)" />
+
+    <!-- Wave Glow Overlays (Bottom Aurora effect) -->
+    <!-- Left Purple Waves -->
+    <path d="M -50,320 Q 120,440 280,340 T 550,420 L 550,550 L -50,550 Z" fill="url(#purpleGlow)" />
+    <path d="M -20,360 Q 150,420 300,370 T 520,460 L 520,550 L -20,550 Z" fill="url(#purpleGlow)" opacity="0.6" />
+
+    <!-- Right Teal Waves -->
+    <path d="M -50,440 Q 180,330 350,410 T 550,300 L 550,550 L -50,550 Z" fill="url(#tealGlow)" />
+    <path d="M -10,400 Q 200,360 380,390 T 560,350 L 560,550 L -10,550 Z" fill="url(#tealGlow)" opacity="0.5" />
+    
+    <!-- Smooth blending overlay for realistic aura transitions -->
+    <rect y="250" width="500" height="250" fill="#1EC4B4" opacity="0.06" style="mix-blend-mode: overlay;" />
+
+    <!-- Center White Logo Emblem (Capsule 0 + Inner Circle) -->
+    <!-- Outer white track boundary -->
+    <rect x="165" y="115" width="170" height="270" rx="85" ry="85" fill="none" stroke="#FFFFFF" stroke-width="42" />
+    
+    <!-- Inner central dot -->
+    <circle cx="250" cy="250" r="26" fill="#FFFFFF" />
+  </g>
+</svg>

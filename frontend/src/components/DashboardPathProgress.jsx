@@ -15,13 +15,13 @@ function DashboardPathProgress({ paths }) {
       className="rounded-2xl border border-border/80 bg-surface/75 p-6 shadow-[0_18px_45px_color-mix(in_srgb,var(--theme-shadow)_8%,transparent)] backdrop-blur-xl">
       <div>
         <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">
-          Learning paths
+          Java path
         </p>
 
         <h2
           id="dashboard-path-heading"
           className="mt-2 text-2xl font-bold text-ink-950">
-          Curriculum progress
+          Path progress
         </h2>
       </div>
 

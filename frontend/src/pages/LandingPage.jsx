@@ -166,6 +166,99 @@ function useSectionFocus({ revealAtDocumentEnd = false } = {}) {
   return [sectionRef, hasFocused];
 }
 
+function useAmbientPointer() {
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    const supportsPointerMotion = window.matchMedia("(pointer: fine)");
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
+    if (!hero || !supportsPointerMotion.matches || prefersReducedMotion.matches) {
+      return undefined;
+    }
+
+    let animationFrameId = null;
+    const current = { x: 0, y: 0 };
+    const target = { x: 0, y: 0 };
+
+    const writeOffsets = () => {
+      current.x += (target.x - current.x) * 0.075;
+      current.y += (target.y - current.y) * 0.075;
+
+      hero.style.setProperty("--ambient-primary-x", `${current.x * 24}px`);
+      hero.style.setProperty("--ambient-primary-y", `${current.y * 18}px`);
+      hero.style.setProperty("--ambient-accent-x", `${current.x * -18}px`);
+      hero.style.setProperty("--ambient-accent-y", `${current.y * -14}px`);
+      hero.style.setProperty("--ambient-focus-x", `${current.x * 11}px`);
+      hero.style.setProperty("--ambient-focus-y", `${current.y * 9}px`);
+      hero.style.setProperty("--ambient-soft-x", `${current.x * -8}px`);
+      hero.style.setProperty("--ambient-soft-y", `${current.y * -7}px`);
+
+      const isSettled =
+        Math.abs(target.x - current.x) < 0.002 &&
+        Math.abs(target.y - current.y) < 0.002;
+
+      if (isSettled) {
+        animationFrameId = null;
+        return;
+      }
+
+      animationFrameId = window.requestAnimationFrame(writeOffsets);
+    };
+
+    const requestOffsetUpdate = () => {
+      if (animationFrameId === null) {
+        animationFrameId = window.requestAnimationFrame(writeOffsets);
+      }
+    };
+
+    const handlePointerMove = (event) => {
+      const bounds = hero.getBoundingClientRect();
+      target.x = Math.max(
+        -1,
+        Math.min(1, ((event.clientX - bounds.left) / bounds.width - 0.5) * 2),
+      );
+      target.y = Math.max(
+        -1,
+        Math.min(1, ((event.clientY - bounds.top) / bounds.height - 0.5) * 2),
+      );
+      requestOffsetUpdate();
+    };
+
+    const handlePointerLeave = () => {
+      target.x = 0;
+      target.y = 0;
+      requestOffsetUpdate();
+    };
+
+    hero.addEventListener("pointermove", handlePointerMove, { passive: true });
+    hero.addEventListener("pointerleave", handlePointerLeave);
+
+    return () => {
+      hero.removeEventListener("pointermove", handlePointerMove);
+      hero.removeEventListener("pointerleave", handlePointerLeave);
+      if (animationFrameId !== null) {
+        window.cancelAnimationFrame(animationFrameId);
+      }
+      [
+        "--ambient-primary-x",
+        "--ambient-primary-y",
+        "--ambient-accent-x",
+        "--ambient-accent-y",
+        "--ambient-focus-x",
+        "--ambient-focus-y",
+        "--ambient-soft-x",
+        "--ambient-soft-y",
+      ].forEach((property) => hero.style.removeProperty(property));
+    };
+  }, []);
+
+  return heroRef;
+}
+
 function LandingPage({ authSession }) {
   const isAuthenticated = Boolean(authSession?.token);
   const learningDestination = isAuthenticated ? "/dashboard" : "/register";
@@ -174,6 +267,7 @@ function LandingPage({ authSession }) {
   const [closingCtaRef, hasFocusedClosingCta] = useSectionFocus({
     revealAtDocumentEnd: true,
   });
+  const landingHeroRef = useAmbientPointer();
 
   useEffect(() => {
     const documentRoot = document.documentElement;
@@ -186,7 +280,9 @@ function LandingPage({ authSession }) {
 
   return (
     <main>
-      <section className="landing-hero landing-chapter landing-chapter-hero relative isolate overflow-hidden bg-canvas">
+      <section
+        className="landing-hero landing-chapter landing-chapter-hero relative isolate overflow-hidden bg-canvas"
+        ref={landingHeroRef}>
         <div className="landing-hero-ambient" aria-hidden="true">
           <span className="landing-hero-blur landing-hero-blur-primary" />
           <span className="landing-hero-blur landing-hero-blur-accent" />

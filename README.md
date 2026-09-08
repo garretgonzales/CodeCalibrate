@@ -2,7 +2,7 @@
 
 <h1>⚙️ Code Calibrate</h1>
 
-<p><strong>Practice what you need. Build toward mastery.</strong></p>
+<p><strong>Java practice that meets you where you are.</strong></p>
 
 <p>
   <a href="https://codecalibrate.dev">
@@ -15,7 +15,7 @@
 
 </div>
 
-Code Calibrate is a full-stack Java practice platform that turns exercise results into an explainable next recommendation. A learner registers, receives an exercise selected from their current mastery, writes Java in an embedded editor, submits it for isolated evaluation, and receives immediate feedback. A trusted verdict updates skill mastery and influences what the learner practices next.
+Code Calibrate is a full-stack Java practice platform that turns trusted exercise results into an explainable next recommendation. A learner registers, receives an exercise selected from their current mastery, writes Java in an embedded editor, submits it for isolated evaluation, and receives immediate feedback. The resulting verdict updates a data-focused dashboard and influences what the learner practices next.
 
 | 🎯 Adaptive practice | 🔒 Trusted evaluation | 🚀 Production deployed |
 | :---: | :---: | :---: |
@@ -38,22 +38,28 @@ Code Calibrate is a full-stack Java practice platform that turns exercise result
 ### Learning experience
 
 - Public landing page with project explanation and responsive navigation
+- Scroll-focused landing story that visualizes the complete submission and recommendation flow
 - Account registration, login, logout, and browser-session restoration
-- Personalized dashboard with the next recommended exercise
+- Personalized dashboard with attempts, accepted results, completed exercises, accuracy, average mastery, and the next recommended exercise
+- Skill-level mastery, Java pathway progress, and deduplicated recent exercise history
+- Direct access to revisit previously attempted exercises
 - Java exercises grouped by skills and a Java learning path
-- Embedded CodeMirror editor with Java syntax highlighting and accessible keyboard guidance
+- Embedded CodeMirror editor with Java syntax highlighting, accessible keyboard guidance, and a persisted autocomplete toggle
 - Authenticated exercise submission and immediate correct/incorrect feedback
-- Rectangular verdict panels and a reduced-motion-aware success animation
+- Inline submission progress, rectangular verdict panels, and a reduced-motion-aware success animation
 - Mastery updates based on trusted exercise verdicts
 - Recommendations that prioritize weak skills and unattempted exercises
 - Collapsible, exercise-specific Java documentation references
-- Three color palettes, each with light and dark modes, persisted across pages
+- Filterable project resource library organized by technology
+- Four color palettes, each with light and dark modes, persisted across pages
+- Theme-aware transitions and landing animations with reduced-motion fallbacks
 
 ### Backend behavior
 
 - Stateless JWT authentication enforced by Spring Security
 - BCrypt password hashing
 - MySQL persistence for users, curriculum metadata, attempts, and mastery
+- Aggregated dashboard data for learner metrics, skill mastery, recent exercises, pathway progress, and recommendations
 - Judge0 integration for isolated Java compilation and execution
 - Private, commit-pinned exercise definitions retrieved through the GitHub API
 - Trusted hidden tests that are never returned to the browser
@@ -209,12 +215,15 @@ The generated `frontend/dist` directory is ignored and should not be committed.
 For an end-to-end manual check:
 
 1. Register or log in.
-2. Confirm the dashboard recommends an exercise.
-3. Open the exercise and verify its instructions, starter code, and Java reference panel.
-4. Submit an incorrect solution and confirm the warning verdict.
-5. Submit a correct solution and confirm the accepted animation.
-6. Return to the dashboard and verify the next recommendation changes according to mastery and attempt history.
-7. Refresh during the session and confirm authentication is restored; close the browser session and confirm login is required again.
+2. Confirm the dashboard displays learner metrics, mastery, pathway progress, recent exercises, and a recommendation.
+3. Revisit a previously attempted exercise and confirm each exercise appears only once in the recent list.
+4. Open an exercise and verify its instructions, starter code, autocomplete setting, and Java reference panel.
+5. Submit an incorrect solution and confirm the loading state resolves into the warning verdict.
+6. Submit a correct solution and confirm the accepted animation.
+7. Return to the dashboard and verify the metrics and next recommendation respond to the new result.
+8. Open the Resources page and confirm technology filters update the visible reference cards.
+9. Change the palette and light/dark mode, refresh, and confirm the preference persists across routes.
+10. Refresh during the session and confirm authentication is restored; close the browser session and confirm login is required again.
 
 ## 🗂️ Project structure
 
@@ -227,7 +236,9 @@ CodeCalibrate/
 |  `- Dockerfile
 |- frontend/
 |  |- src/api/                   # HTTP client functions
-|  |- src/components/            # Header, themes, editor, references
+|  |- src/components/            # Header, dashboard modules, editor, references, flow visuals
+|  |- src/data/                  # Project resource-library definitions
+|  |- src/editor/                # CodeMirror preferences and Java completions
 |  |- src/pages/                 # Landing, auth, dashboard, exercise routes
 |  |- src/theme/                 # Persistent palette and mode foundation
 |  |- Caddyfile
@@ -239,7 +250,7 @@ CodeCalibrate/
 ## ⚠️ Current limitations
 
 - The active curriculum is Java-only and intentionally small.
-- Mastery is calculated and used for recommendations, but a full learner profile and mastery dashboard are not implemented yet.
+- Dashboard progress is available, but a dedicated learner profile with an avatar, profile editing, and a complete activity archive is not implemented yet.
 - Exercise evaluation depends on the availability and latency of Judge0/RapidAPI.
 - Exercise assembly depends on access to the pinned private GitHub content revision.
 - Authentication lasts for the current browser session by design; closing the session requires another login.
@@ -250,11 +261,11 @@ CodeCalibrate/
 Planned work is prioritized around making the learning loop deeper before broadening the platform:
 
 1. Expand the Java exercise catalog and learning-path coverage.
-2. Add a learner profile with completed exercises, mastery scores, weak skills, strong skills, and pathway progress.
-3. Improve exercise guidance with richer references and optional editor code completion.
-4. Reduce perceived submission latency and improve verdict progress feedback.
+2. Add a learner profile with an avatar, completed exercises, mastery summaries, and longer-term activity history.
+3. Improve exercise guidance with richer skill-specific references and more context-aware editor suggestions.
+4. Reduce Judge0 turnaround time and make submission progress more representative of the remote evaluation state.
 5. Add GitHub project discovery and track project work separately from exercise mastery.
-6. Continue landing-page illustration, interaction, and accessibility improvements.
+6. Continue refining responsive layout, landing-page motion, and accessibility across mobile and desktop views.
 
 ## 📚 Exercise content and attribution
 

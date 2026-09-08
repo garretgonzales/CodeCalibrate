@@ -20,9 +20,9 @@ function ExercisePage({ authSession, onLogout }) {
   const [isLoading, setIsLoading] = useState(true);
   const [result, setResult] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-const [autocompleteEnabled, setAutocompleteEnabled] = useState(
-  () => readEditorPreferences().autocompleteEnabled,
-);
+  const [autocompleteEnabled, setAutocompleteEnabled] = useState(
+    () => readEditorPreferences().autocompleteEnabled,
+  );
 
   useEffect(() => {
     if (!authSession) {
@@ -116,22 +116,24 @@ const [autocompleteEnabled, setAutocompleteEnabled] = useState(
 
           <div className="exercise-workspace">
             <form className="editor-section" onSubmit={handleSubmit}>
-              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                <label id="source-code-label">Java source code</label>
+              <div className="editor-toolbar">
+                <label className="editor-label" id="source-code-label">
+                  Java source code
+                </label>
 
-                <div className="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
-                  <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-ink-500">
+                <div className="editor-options">
+                  <label className="editor-suggestions-control">
                     <input
                       type="checkbox"
                       checked={autocompleteEnabled}
                       onChange={(event) => {
-  const nextAutocompleteEnabled = event.target.checked;
+                        const nextAutocompleteEnabled = event.target.checked;
 
-  setAutocompleteEnabled(nextAutocompleteEnabled);
-  storeEditorPreferences({
-    autocompleteEnabled: nextAutocompleteEnabled,
-  });
-}}
+                        setAutocompleteEnabled(nextAutocompleteEnabled);
+                        storeEditorPreferences({
+                          autocompleteEnabled: nextAutocompleteEnabled,
+                        });
+                      }}
                       className="h-4 w-4 accent-brand-500"
                     />
                     Code suggestions
@@ -139,7 +141,7 @@ const [autocompleteEnabled, setAutocompleteEnabled] = useState(
 
                   <p
                     id="editor-keyboard-help"
-                    className="m-0 text-sm text-ink-500">
+                    className="editor-keyboard-help">
                     Tab indents. Press Escape, then Tab to leave the editor.
                   </p>
                 </div>
@@ -162,29 +164,29 @@ const [autocompleteEnabled, setAutocompleteEnabled] = useState(
                 {sourceCode.length} / 20000 characters
               </p>
 
-              <div className="flex items-center justify-end gap-4">
-                <div className="min-w-0 flex-1">
+              <div className="exercise-submit-row">
+                <div className="exercise-verdict-region">
                   {result ? (
                     <section
-                      className={`grid min-h-14 gap-1 border border-l-[0.375rem] px-3 py-2 sm:grid-cols-[auto_minmax(0,1fr)_auto] sm:items-center sm:gap-3 ${
+                      className={`result-card ${
                         result.correct ? "result-correct" : "result-incorrect"
                       }`}
                       aria-live="polite">
                       <h2 className="m-0 text-base">
-                        {result.correct ? "Correct!" : "Not quite yet"}
+                        {result.correct ? "Solution accepted" : "Try again"}
                       </h2>
 
                       <p className="m-0 text-sm">
                         {result.correct
-                          ? "Your attempt was accepted and your mastery has been updated."
-                          : "Your attempt was not accepted. Review your code and try again."}
+                          ? "Your progress has been updated."
+                          : "Review your code, make a change, and submit it again."}
                       </p>
 
                       {result.correct && (
                         <Link
                           className="next-recommendation-link whitespace-nowrap text-sm"
                           to="/dashboard">
-                          View next recommendation
+                          Back to dashboard
                         </Link>
                       )}
                     </section>
@@ -194,7 +196,7 @@ const [autocompleteEnabled, setAutocompleteEnabled] = useState(
                 </div>
 
                 <button
-                  className="primary-button w-44 shrink-0"
+                  className="primary-button exercise-submit-button"
                   type="submit"
                   disabled={isSubmitting || sourceCode.trim() === ""}>
                   {isSubmitting ? "Checking solution…" : "Submit solution"}

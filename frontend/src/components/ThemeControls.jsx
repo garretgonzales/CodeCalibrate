@@ -35,14 +35,14 @@ function ThemeControls() {
 
   return (
     <details className="theme-controls relative shrink-0" ref={detailsRef}>
-      <summary className="theme-trigger inline-flex min-h-10 cursor-pointer list-none items-center justify-center gap-2 border border-inverse-border bg-transparent px-3 py-2 text-sm font-semibold text-inverse-foreground transition hover:bg-inverse-overlay focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 [&::-webkit-details-marker]:hidden">
+      <summary className="theme-trigger inline-flex min-h-10 cursor-pointer list-none items-center justify-center gap-2 rounded-lg border border-inverse-border bg-transparent px-3 py-2 text-sm font-semibold text-inverse-foreground transition hover:bg-inverse-overlay focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 [&::-webkit-details-marker]:hidden">
         <span aria-hidden="true">◐</span>
         <span className="sr-only sm:not-sr-only">Theme</span>
       </summary>
 
-      <div className="theme-panel absolute right-0 z-50 mt-3 w-64 border border-strong bg-surface p-4 text-ink-950 shadow-xl">
-        <p className="m-0 font-mono text-[0.68rem] font-bold tracking-[0.16em] text-ink-500">
-          DISPLAY CALIBRATION
+      <div className="theme-panel absolute right-0 z-50 mt-3 w-64 rounded-2xl border border-strong bg-surface p-4 text-ink-950 shadow-xl">
+        <p className="m-0 text-xs font-bold uppercase tracking-[0.12em] text-ink-500">
+          Appearance
         </p>
 
         <label
@@ -51,7 +51,7 @@ function ThemeControls() {
           Color palette
         </label>
         <select
-          className="mt-2 min-h-10 w-full border border-strong bg-surface px-3 py-2 text-sm text-ink-950 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400"
+          className="mt-2 min-h-10 w-full rounded-xl border border-strong bg-surface px-3 py-2 text-sm text-ink-950 focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400"
           id="theme-palette"
           value={palette}
           onChange={(event) => setPalette(event.target.value)}>
@@ -66,7 +66,7 @@ function ThemeControls() {
           <legend className="text-sm font-semibold text-ink-700">
             Appearance
           </legend>
-          <div className="mt-2 grid grid-cols-2 border border-strong bg-surface-muted p-1">
+          <div className="mt-2 grid grid-cols-2 rounded-xl border border-strong bg-surface-muted p-1">
             {THEME_MODES.map((option) => (
               <label
                 className={`relative cursor-pointer px-3 py-2 text-center text-sm font-semibold focus-within:outline-3 focus-within:outline-offset-2 focus-within:outline-accent-400 ${

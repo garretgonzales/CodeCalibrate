@@ -9,7 +9,7 @@ function SiteHeader({ authSession, onLogout }) {
     <header className="site-header border-b border-inverse-border bg-inverse-surface text-inverse-foreground">
       <div className="mx-auto flex min-h-18 w-full max-w-7xl items-center gap-2 px-4 py-3 sm:gap-4 sm:px-6 lg:px-8">
         <Link
-          className="code-calibrate-brand-link flex shrink-0 items-center gap-2 rounded-sm focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400 sm:gap-3"
+          className="code-calibrate-brand-link flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400 sm:gap-3"
           to="/"
           aria-label="Code Calibrate home">
           <span
@@ -31,13 +31,13 @@ function SiteHeader({ authSession, onLogout }) {
           {authSession ? (
             <>
               <Link
-                className="hidden rounded-sm px-1 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex sm:px-2"
+                className="hidden rounded-lg px-1 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex sm:px-2"
                 to="/dashboard">
                 Dashboard
               </Link>
 
               <Link
-                className="hidden rounded-sm px-1 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex sm:px-2"
+                className="hidden rounded-lg px-1 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex sm:px-2"
                 to="/resources">
                 Resources
               </Link>
@@ -52,25 +52,25 @@ function SiteHeader({ authSession, onLogout }) {
           ) : (
             <>
               <a
-                className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
+                className="hidden rounded-lg px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
                 href="/#how-it-works">
                 How it works
               </a>
 
               <a
-                className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
+                className="hidden rounded-lg px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
                 href="/#java-path">
                 Java path
               </a>
 
               <Link
-                className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
+                className="hidden rounded-lg px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 lg:inline-flex"
                 to="/resources">
                 Resources
               </Link>
 
               <Link
-                className="hidden rounded-sm px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex"
+                className="hidden rounded-lg px-2 py-2 text-sm font-semibold text-inverse-muted transition hover:text-inverse-foreground focus-visible:outline-3 focus-visible:outline-offset-2 focus-visible:outline-accent-400 sm:inline-flex"
                 to="/login">
                 Log in
               </Link>

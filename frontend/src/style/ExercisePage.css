@@ -7,7 +7,7 @@
   margin-bottom: 1.5rem;
   padding: 1.5rem;
   border: 1px solid var(--theme-border);
-  border-radius: 0.75rem;
+  border-radius: 1.25rem;
   color: var(--theme-foreground);
   background: var(--theme-surface);
 }
@@ -52,6 +52,59 @@
   text-align: right;
 }
 
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+.editor-label {
+  font-weight: 700;
+}
+
+.editor-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem 1rem;
+}
+
+.editor-suggestions-control {
+  display: inline-flex;
+  min-height: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--theme-muted);
+  font-size: 0.875rem;
+}
+
+.editor-keyboard-help {
+  margin: 0;
+  color: var(--theme-muted);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.exercise-submit-row {
+  display: grid;
+  min-width: 0;
+  gap: 1rem;
+}
+
+.exercise-verdict-region {
+  min-width: 0;
+}
+
+.exercise-submit-button {
+  width: 100%;
+  min-height: 3rem;
+  margin-top: 0;
+}
+
 .submit-exercise-button {
   justify-self: start;
 }
@@ -63,7 +116,7 @@
   padding: 1.25rem 1.5rem;
   border: 1px solid;
   border-left-width: 0.375rem;
-  border-radius: 0;
+  border-radius: 1rem;
   box-shadow: 0 10px 30px
     color-mix(in srgb, var(--theme-shadow) 10%, transparent);
 }
@@ -71,6 +124,15 @@
 .result-card h2,
 .result-card p {
   margin: 0;
+}
+
+.result-card h2 {
+  font-size: 1rem;
+}
+
+.result-card p,
+.result-card a {
+  overflow-wrap: anywhere;
 }
 
 .result-correct {
@@ -110,6 +172,51 @@
 
 .next-recommendation-link {
   font-weight: 600;
+}
+
+@media (min-width: 40rem) {
+  .exercise-submit-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+  }
+
+  .exercise-submit-button {
+    width: 11rem;
+  }
+
+  .result-card {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 39.9375rem) {
+  .exercise-instructions,
+  .editor-section {
+    padding: 1rem;
+  }
+
+  .editor-toolbar,
+  .editor-options {
+    align-items: flex-start;
+  }
+
+  .editor-options {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .character-count {
+    overflow-wrap: anywhere;
+    font-size: 0.8125rem;
+  }
+
+  .exercise-references summary,
+  .exercise-references ul {
+    padding-right: 1rem;
+    padding-left: 1rem;
+  }
 }
 
 @keyframes accepted-result-enter {

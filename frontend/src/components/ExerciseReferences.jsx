@@ -5,7 +5,7 @@ function ExerciseReferences({ references = [] }) {
 
   return (
     <aside
-      className="overflow-hidden rounded-xl border border-border bg-surface text-ink-950 shadow-[0_10px_30px_color-mix(in_srgb,var(--theme-shadow)_8%,transparent)] min-[70rem]:sticky min-[70rem]:top-6"
+      className="exercise-references overflow-hidden rounded-2xl border border-border bg-surface text-ink-950 shadow-[0_10px_30px_color-mix(in_srgb,var(--theme-shadow)_8%,transparent)] min-[70rem]:sticky min-[70rem]:top-6"
       aria-labelledby="exercise-references-heading">
       <details className="[&[open]>summary]:border-b [&[open]>summary]:border-border" open>
         <summary

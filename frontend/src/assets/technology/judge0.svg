@@ -41,14 +41,14 @@
     <!-- Right Teal Waves -->
     <path d="M -50,440 Q 180,330 350,410 T 550,300 L 550,550 L -50,550 Z" fill="url(#tealGlow)" />
     <path d="M -10,400 Q 200,360 380,390 T 560,350 L 560,550 L -10,550 Z" fill="url(#tealGlow)" opacity="0.5" />
-    
+
     <!-- Smooth blending overlay for realistic aura transitions -->
     <rect y="250" width="500" height="250" fill="#1EC4B4" opacity="0.06" style="mix-blend-mode: overlay;" />
 
     <!-- Center White Logo Emblem (Capsule 0 + Inner Circle) -->
     <!-- Outer white track boundary -->
     <rect x="165" y="115" width="170" height="270" rx="85" ry="85" fill="none" stroke="#FFFFFF" stroke-width="42" />
-    
+
     <!-- Inner central dot -->
     <circle cx="250" cy="250" r="26" fill="#FFFFFF" />
   </g>

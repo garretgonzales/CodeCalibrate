@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import SubmissionFlowStory from "../components/SubmissionFlowStory";
 import javaLogo from "../assets/technology/java.svg";
 import codeMirrorLogo from "../assets/technology/code-mirror.svg";
 import springLogo from "../assets/technology/spring.svg";
@@ -60,38 +61,140 @@ const javaSkills = [
   },
 ];
 
-function LandingPage({ authSession }) {
-  const isAuthenticated = Boolean(authSession?.token);
-  const learningDestination = isAuthenticated ? "/dashboard" : "/register";
-  const javaPathRef = useRef(null);
-  const [hasEnteredJavaPath, setHasEnteredJavaPath] = useState(false);
+function useSectionFocus({ revealAtDocumentEnd = false } = {}) {
+  const sectionRef = useRef(null);
+  const [hasFocused, setHasFocused] = useState(() => {
+    if (typeof window === "undefined") {
+      return true;
+    }
+
+    return (
+      !("IntersectionObserver" in window) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+  });
 
   useEffect(() => {
-    const section = javaPathRef.current;
+    const section = sectionRef.current;
 
-    if (!section || hasEnteredJavaPath) {
+    if (!section || hasFocused) {
       return undefined;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasEnteredJavaPath(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "0px 0px -12%", threshold: 0.3 },
-    );
+    let observer;
 
-    observer.observe(section);
+    const revealSection = () => {
+      setHasFocused(true);
+      observer?.unobserve(section);
+      observer?.disconnect();
+      window.removeEventListener("scroll", handleScroll);
+    };
 
-    return () => observer.disconnect();
-  }, [hasEnteredJavaPath]);
+    const observeSection = () => {
+      if (observer) {
+        return;
+      }
+
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            revealSection();
+          }
+        },
+        {
+          rootMargin: "-30% 0px -30%",
+          threshold: 0,
+        },
+      );
+
+      observer.observe(section);
+    };
+
+    const hasReachedDocumentEnd = () => {
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollBottom = window.scrollY + window.innerHeight;
+
+      return scrollBottom >= documentHeight - 4;
+    };
+
+    const isMeaningfullyVisible = () => {
+      const bounds = section.getBoundingClientRect();
+      const visibleHeight =
+        Math.min(bounds.bottom, window.innerHeight) - Math.max(bounds.top, 0);
+      const requiredHeight = Math.min(bounds.height * 0.6, window.innerHeight * 0.25);
+
+      return visibleHeight >= requiredHeight;
+    };
+
+    const handleScroll = () => {
+      observeSection();
+
+      if (
+        revealAtDocumentEnd &&
+        hasReachedDocumentEnd() &&
+        isMeaningfullyVisible()
+      ) {
+        revealSection();
+      } else if (!revealAtDocumentEnd) {
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+
+    if (window.scrollY > 8) {
+      observeSection();
+    } else {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    if (revealAtDocumentEnd && window.scrollY > 8) {
+      window.addEventListener("scroll", handleScroll, { passive: true });
+    }
+
+    const frameId = revealAtDocumentEnd
+      ? window.requestAnimationFrame(handleScroll)
+      : null;
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameId !== null) {
+        window.cancelAnimationFrame(frameId);
+      }
+      observer?.disconnect();
+    };
+  }, [hasFocused, revealAtDocumentEnd]);
+
+  return [sectionRef, hasFocused];
+}
+
+function LandingPage({ authSession }) {
+  const isAuthenticated = Boolean(authSession?.token);
+  const learningDestination = isAuthenticated ? "/dashboard" : "/register";
+  const [howItWorksRef, hasFocusedHowItWorks] = useSectionFocus();
+  const [javaPathRef, hasFocusedJavaPath] = useSectionFocus();
+  const [closingCtaRef, hasFocusedClosingCta] = useSectionFocus({
+    revealAtDocumentEnd: true,
+  });
+
+  useEffect(() => {
+    const documentRoot = document.documentElement;
+    documentRoot.classList.add("landing-chapter-scroll");
+
+    return () => {
+      documentRoot.classList.remove("landing-chapter-scroll");
+    };
+  }, []);
 
   return (
     <main>
-      <section className="landing-hero relative isolate overflow-hidden bg-canvas">
-        <div className="relative z-10 mx-auto grid w-full max-w-7xl gap-14 px-6 py-20 md:py-28 lg:grid-cols-[minmax(0,1.02fr)_minmax(30rem,0.98fr)] lg:items-center lg:px-8 lg:py-32">
+      <section className="landing-hero landing-chapter landing-chapter-hero relative isolate overflow-hidden bg-canvas">
+        <div className="landing-hero-ambient" aria-hidden="true">
+          <span className="landing-hero-blur landing-hero-blur-primary" />
+          <span className="landing-hero-blur landing-hero-blur-accent" />
+          <span className="landing-hero-blur landing-hero-blur-focus" />
+          <span className="landing-hero-blur landing-hero-blur-soft" />
+        </div>
+
+        <div className="landing-chapter-content relative z-10 mx-auto grid w-full max-w-7xl gap-14 px-6 py-20 md:py-28 lg:grid-cols-[minmax(0,1.02fr)_minmax(30rem,0.98fr)] lg:items-center lg:px-8 lg:py-32">
           <div className="landing-reveal max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-600">
               Adaptive Java practice
@@ -258,12 +361,17 @@ function LandingPage({ authSession }) {
         </div>
       </section>
 
+      <SubmissionFlowStory />
+
       <section
-        className="bg-surface"
+        className={`section-focus landing-chapter landing-chapter-how landing-snap-section bg-surface ${
+          hasFocusedHowItWorks ? "section-focus-active" : ""
+        }`}
         id="how-it-works"
+        ref={howItWorksRef}
         aria-labelledby="how-it-works-heading">
-        <div className="mx-auto w-full max-w-7xl px-6 py-20 md:py-28 lg:px-8 lg:py-32">
-          <div className="max-w-2xl">
+        <div className="landing-chapter-content mx-auto w-full max-w-7xl px-6 py-20 md:py-28 lg:px-8 lg:py-32">
+          <div className="section-focus-item section-focus-copy max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-600">
               How it works
             </p>
@@ -281,7 +389,7 @@ function LandingPage({ authSession }) {
           <ol className="how-it-works-cards mt-12 grid gap-5 md:grid-cols-3">
             {learningSteps.map((step) => (
               <li
-                className="process-card group relative min-w-0 overflow-hidden rounded-2xl border border-border bg-surface p-6 shadow-sm transition-[translate,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_55px_color-mix(in_srgb,var(--theme-shadow)_16%,transparent)] focus-visible:-translate-y-1 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400 motion-reduce:transform-none motion-reduce:transition-none"
+                className="section-focus-item process-card group relative min-w-0 overflow-hidden rounded-2xl border border-border bg-surface p-6 shadow-sm transition-[translate,border-color,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_55px_color-mix(in_srgb,var(--theme-shadow)_16%,transparent)] focus-visible:-translate-y-1 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-accent-400 motion-reduce:transform-none motion-reduce:transition-none"
                 key={step.number}
                 style={{ "--process-card-accent": step.accent }}
                 tabIndex={0}>
@@ -328,14 +436,14 @@ function LandingPage({ authSession }) {
       </section>
 
       <section
-        className={`java-path-section bg-brand-50/55 ${
-          hasEnteredJavaPath ? "java-path-active" : ""
+        className={`section-focus java-path-section landing-chapter landing-chapter-java landing-snap-section bg-brand-50/55 ${
+          hasFocusedJavaPath ? "section-focus-active java-path-active" : ""
         }`}
         id="java-path"
         ref={javaPathRef}
         aria-labelledby="java-path-heading">
-        <div className="mx-auto grid w-full max-w-7xl gap-12 px-6 py-20 md:py-28 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-18 lg:px-8 lg:py-32">
-          <div className="max-w-xl">
+        <div className="landing-chapter-content mx-auto grid w-full max-w-7xl gap-12 px-6 py-20 md:py-28 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:gap-18 lg:px-8 lg:py-32">
+          <div className="section-focus-item section-focus-copy max-w-xl">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-600">
               Example Java path
             </p>
@@ -350,7 +458,7 @@ function LandingPage({ authSession }) {
             </p>
           </div>
 
-          <div className="adaptive-path-readout rounded-3xl border border-brand-200 bg-surface shadow-[0_20px_55px_color-mix(in_srgb,var(--theme-shadow)_12%,transparent)]">
+          <div className="section-focus-item section-focus-readout adaptive-path-readout rounded-3xl border border-brand-200 bg-surface shadow-[0_20px_55px_color-mix(in_srgb,var(--theme-shadow)_12%,transparent)]">
             <div className="flex flex-col gap-3 border-b border-brand-100 px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-7">
               <div>
                 <p className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-brand-600">
@@ -400,9 +508,13 @@ function LandingPage({ authSession }) {
         </div>
       </section>
 
-      <section className="bg-inverse-surface text-inverse-foreground">
+      <section
+        className={`section-focus landing-chapter landing-chapter-cta landing-snap-section bg-inverse-surface text-inverse-foreground ${
+          hasFocusedClosingCta ? "section-focus-active" : ""
+        }`}
+        ref={closingCtaRef}>
         <div className="mx-auto flex w-full max-w-7xl flex-col items-start gap-7 px-6 py-20 sm:flex-row sm:items-center sm:justify-between md:py-24 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="section-focus-item section-focus-copy max-w-2xl">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-accent-400">
               Keep practicing
             </p>
@@ -411,7 +523,7 @@ function LandingPage({ authSession }) {
             </h2>
           </div>
           <Link
-            className="primary-button m-0 shrink-0"
+            className="section-focus-item section-focus-action primary-button m-0 shrink-0"
             to={learningDestination}>
             {isAuthenticated ? "Continue learning" : "Create account"}
           </Link>

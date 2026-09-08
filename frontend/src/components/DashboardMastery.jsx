@@ -42,7 +42,7 @@ function DashboardMastery({ skills }) {
                     </p>
                   </div>
 
-                  <p className="font-mono text-lg font-bold text-brand-600">
+                  <p className="text-lg font-bold text-brand-600">
                     <AnimatedNumber
                       value={masteryScore}
                       decimals={2}

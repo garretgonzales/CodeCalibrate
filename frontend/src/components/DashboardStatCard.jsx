@@ -13,7 +13,7 @@ function DashboardStatCard({
         {label}
       </p>
 
-      <p className="mt-3 font-mono text-3xl font-bold tracking-tight text-ink-950">
+      <p className="mt-3 text-3xl font-bold tracking-tight text-ink-950">
         <AnimatedNumber value={value} decimals={decimals} suffix={suffix} />
       </p>
 

@@ -54,7 +54,7 @@ function DashboardPathProgress({ paths }) {
                     </p>
                   </div>
 
-                  <p className="font-mono font-bold text-brand-600">
+                  <p className="font-bold text-brand-600">
                     <AnimatedNumber value={progress} suffix="%" />
                   </p>
                 </div>
@@ -90,7 +90,7 @@ function DashboardPathProgress({ paths }) {
                         </p>
                       </div>
 
-                      <p className="font-mono text-ink-700">
+                      <p className="text-ink-700">
                         <AnimatedNumber
                           value={skill.masteryScore}
                           decimals={2}

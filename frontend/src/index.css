@@ -1726,10 +1726,8 @@ textarea {
     color-mix(in srgb, var(--theme-shadow) 28%, transparent);
 }
 .site-header {
-  transition: padding-bottom 160ms ease;
-}
-.site-header:has(.theme-controls[open]) {
-  padding-bottom: 16rem;
+  position: relative;
+  z-index: 100;
 }
 
 .verdict-loader-progress {

@@ -341,3 +341,549 @@ values
     (@log_levels_exercise_id, @methods_skill_id) as incoming
 on duplicate key update
     skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-resistor-color-001',
+        'Resistor Color',
+        'Implement a Java method that converts a resistor band color name into its numeric code by finding its position in the standard color sequence.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-resistor-color-duo-001',
+        'Resistor Color Duo',
+        'Implement Java methods that convert two resistor band colors into a two-digit numeric value using the standard resistor color sequence.',
+        'Beginner',
+        'Exercism'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @resistor_color_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-resistor-color-001'
+    );
+
+set
+    @resistor_color_duo_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-resistor-color-duo-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@resistor_color_exercise_id, @arrays_skill_id),
+    (@resistor_color_duo_exercise_id, @arrays_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-two-fer-001',
+        'Two Fer',
+        'Implement a Java method that builds the two-fer sentence for a given name, defaulting to "you" when no name is provided.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-acronym-001',
+        'Acronym',
+        'Implement a Java method that converts a multi-word phrase into its uppercase acronym, correctly handling punctuation, hyphens, and mixed casing.',
+        'Intermediate',
+        'Exercism'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @two_fer_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-two-fer-001'
+    );
+
+set
+    @acronym_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'Exercism'
+          and external_id = 'exercism-acronym-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@two_fer_exercise_id, @strings_skill_id),
+    (@acronym_exercise_id, @strings_skill_id),
+    (@acronym_exercise_id, @methods_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'java-array-statistics-001',
+        'Array Statistics',
+        'Write Java methods that find the minimum, maximum, and sum of a list of integers read from input.',
+        'Intermediate',
+        'CodeCalibrate'
+    ),
+    (
+        'java-palindrome-check-001',
+        'Palindrome Check',
+        'Write a Java method that determines whether a string reads the same forwards and backwards.',
+        'Intermediate',
+        'CodeCalibrate'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @array_statistics_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-array-statistics-001'
+    );
+
+set
+    @palindrome_check_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-palindrome-check-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@array_statistics_exercise_id, @arrays_skill_id),
+    (@array_statistics_exercise_id, @methods_skill_id),
+    (@palindrome_check_exercise_id, @strings_skill_id),
+    (@palindrome_check_exercise_id, @methods_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into skills (name, description, difficulty)
+values ('Recursion',
+        'Solve problems by having a method call itself with a smaller input.',
+        'Intermediate'),
+       ('Classes and Objects',
+        'Define classes with fields, constructors, and instance methods that model data.',
+        'Intermediate') as incoming
+on duplicate key update description = incoming.description,
+                        difficulty  = incoming.difficulty;
+
+set
+    @recursion_skill_id = (select id
+                           from skills
+                           where name = 'Recursion');
+
+set
+    @classes_objects_skill_id = (select id
+                                 from skills
+                                 where name = 'Classes and Objects');
+
+insert into learning_path_skills (learning_path_id, skill_id, sequence_order)
+values (@java_path_id, @recursion_skill_id, 5),
+       (@java_path_id, @classes_objects_skill_id, 6) as incoming
+on duplicate key update sequence_order = incoming.sequence_order;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'java-factorial-001',
+        'Factorial',
+        'Write a recursive Java method that computes the factorial of a non-negative integer.',
+        'Beginner',
+        'CodeCalibrate'
+    ),
+    (
+        'java-fibonacci-001',
+        'Fibonacci Number',
+        'Write a recursive Java method that returns the nth Fibonacci number, where fibonacci(0) is 0 and fibonacci(1) is 1.',
+        'Intermediate',
+        'CodeCalibrate'
+    ),
+    (
+        'java-digit-sum-001',
+        'Sum of Digits',
+        'Write a recursive Java method that returns the sum of the digits of a non-negative integer.',
+        'Intermediate',
+        'CodeCalibrate'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @factorial_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-factorial-001'
+    );
+
+set
+    @fibonacci_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-fibonacci-001'
+    );
+
+set
+    @digit_sum_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-digit-sum-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@factorial_exercise_id, @recursion_skill_id),
+    (@factorial_exercise_id, @methods_skill_id),
+    (@fibonacci_exercise_id, @recursion_skill_id),
+    (@fibonacci_exercise_id, @methods_skill_id),
+    (@digit_sum_exercise_id, @recursion_skill_id),
+    (@digit_sum_exercise_id, @methods_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'java-rectangle-001',
+        'Rectangle Class',
+        'Define a Rectangle class with width and height fields, and instance methods that compute its area and perimeter.',
+        'Beginner',
+        'CodeCalibrate'
+    ),
+    (
+        'java-bank-account-001',
+        'Bank Account',
+        'Define a BankAccount class that supports deposits and withdrawals, rejecting any withdrawal that would overdraw the balance.',
+        'Intermediate',
+        'CodeCalibrate'
+    ),
+    (
+        'java-student-grades-001',
+        'Student Grades',
+        'Define a Student class that stores a name and test scores, and computes the average score and whether the student passed.',
+        'Intermediate',
+        'CodeCalibrate'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @rectangle_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-rectangle-001'
+    );
+
+set
+    @bank_account_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-bank-account-001'
+    );
+
+set
+    @student_grades_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-student-grades-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@rectangle_exercise_id, @classes_objects_skill_id),
+    (@bank_account_exercise_id, @classes_objects_skill_id),
+    (@bank_account_exercise_id, @control_flow_skill_id),
+    (@student_grades_exercise_id, @classes_objects_skill_id),
+    (@student_grades_exercise_id, @arrays_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into skills (name, description, difficulty)
+values ('Collections',
+        'Store, search, and transform groups of values using Java''s List and Map collections.',
+        'Intermediate'),
+       ('Exception Handling',
+        'Handle runtime errors gracefully using try, catch, and validation that throws.',
+        'Intermediate') as incoming
+on duplicate key update description = incoming.description,
+                        difficulty  = incoming.difficulty;
+
+set
+    @collections_skill_id = (select id
+                             from skills
+                             where name = 'Collections');
+
+set
+    @exception_handling_skill_id = (select id
+                                    from skills
+                                    where name = 'Exception Handling');
+
+insert into learning_path_skills (learning_path_id, skill_id, sequence_order)
+values (@java_path_id, @collections_skill_id, 7),
+       (@java_path_id, @exception_handling_skill_id, 8) as incoming
+on duplicate key update sequence_order = incoming.sequence_order;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'java-word-frequency-001',
+        'Word Frequency',
+        'Write a Java method that counts how many times each word appears in a line of text using a Map.',
+        'Intermediate',
+        'CodeCalibrate'
+    ),
+    (
+        'java-remove-duplicates-001',
+        'Remove Duplicate Values',
+        'Write a Java method that returns the distinct values from a list of integers, preserving their first-seen order, using a List.',
+        'Intermediate',
+        'CodeCalibrate'
+    ),
+    (
+        'java-two-sum-001',
+        'Two Sum',
+        'Write a Java method that finds the indices of the two numbers in an array that add up to a target value, using a Map for fast lookup.',
+        'Intermediate',
+        'CodeCalibrate'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @word_frequency_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-word-frequency-001'
+    );
+
+set
+    @remove_duplicates_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-remove-duplicates-001'
+    );
+
+set
+    @two_sum_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-two-sum-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@word_frequency_exercise_id, @collections_skill_id),
+    (@word_frequency_exercise_id, @strings_skill_id),
+    (@remove_duplicates_exercise_id, @collections_skill_id),
+    (@remove_duplicates_exercise_id, @arrays_skill_id),
+    (@two_sum_exercise_id, @collections_skill_id),
+    (@two_sum_exercise_id, @arrays_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    difficulty,
+    source
+)
+values
+    (
+        'java-safe-division-001',
+        'Safe Division',
+        'Write a Java method that divides two integers and returns 0 when dividing by zero, catching the ArithmeticException instead of checking beforehand.',
+        'Beginner',
+        'CodeCalibrate'
+    ),
+    (
+        'java-safe-parse-001',
+        'Safe Integer Parsing',
+        'Write a Java method that parses a string to an integer, catching NumberFormatException and returning -1 for invalid input.',
+        'Beginner',
+        'CodeCalibrate'
+    ),
+    (
+        'java-age-validator-001',
+        'Age Validator',
+        'Write a Java method that validates an age is between 0 and 120 inclusive, throwing an IllegalArgumentException when it is not.',
+        'Intermediate',
+        'CodeCalibrate'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     difficulty = incoming.difficulty;
+
+set
+    @safe_division_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-safe-division-001'
+    );
+
+set
+    @safe_parse_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-safe-parse-001'
+    );
+
+set
+    @age_validator_exercise_id = (
+        select
+            id
+        from
+            exercises
+        where
+            source = 'CodeCalibrate'
+          and external_id = 'java-age-validator-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@safe_division_exercise_id, @exception_handling_skill_id),
+    (@safe_division_exercise_id, @methods_skill_id),
+    (@safe_parse_exercise_id, @exception_handling_skill_id),
+    (@safe_parse_exercise_id, @strings_skill_id),
+    (@age_validator_exercise_id, @exception_handling_skill_id),
+    (@age_validator_exercise_id, @control_flow_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;

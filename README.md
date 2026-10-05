@@ -151,7 +151,7 @@ Create a database named `code_calibrate`. Run these scripts against it in order:
 1. [`backend/database/schema.sql`](backend/database/schema.sql)
 2. [`backend/database/seed-data.sql`](backend/database/seed-data.sql)
 
-The application uses `spring.jpa.hibernate.ddl-auto=validate`; it validates the schema but does not create missing tables for you.
+The application uses `spring.jpa.hibernate.ddl-auto=validate`; it validates the schema but does not create missing tables for you. A small idempotent startup migration adds the `exercises.tip` column to existing databases before validation.
 
 ### 2. Configure and start the backend
 

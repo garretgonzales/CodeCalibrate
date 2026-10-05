@@ -887,3 +887,126 @@ values
     (@age_validator_exercise_id, @control_flow_skill_id) as incoming
 on duplicate key update
     skill_id = incoming.skill_id;
+
+insert into
+    exercises (
+    external_id,
+    title,
+    description,
+    tip,
+    difficulty,
+    source
+)
+values
+    (
+        'exercism-leap-001',
+        'Leap Year',
+        'Implement a method that determines whether a year is a leap year using the Gregorian calendar rules.',
+        'A year divisible by four is usually a leap year, except century years unless they are also divisible by 400.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-armstrong-numbers-001',
+        'Armstrong Numbers',
+        'Implement a method that checks whether a number is equal to the sum of its digits raised to the power of the number of digits.',
+        'Convert the number to a string to count its digits, then process each digit without changing the original value.',
+        'Intermediate',
+        'Exercism'
+    ),
+    (
+        'exercism-pangram-001',
+        'Pangram',
+        'Implement a method that determines whether a sentence uses every letter of the English alphabet at least once.',
+        'Normalize the sentence before checking it, and keep track of which alphabet letters have appeared.',
+        'Beginner',
+        'Exercism'
+    ),
+    (
+        'exercism-grains-001',
+        'Grains',
+        'Implement methods that calculate the number of grains on a given chessboard square and the total across the board.',
+        'Each square doubles the previous square. Use a loop for the total and choose a numeric type large enough for the final value.',
+        'Intermediate',
+        'Exercism'
+    ),
+    (
+        'exercism-kindergarten-garden-001',
+        'Kindergarten Garden',
+        'Implement a method that returns the two plants assigned to a student from a two-row garden diagram.',
+        'Find the student’s starting column from the alphabetic roster, then read two adjacent plants from each garden row.',
+        'Intermediate',
+        'Exercism'
+    ) as incoming
+on duplicate key update
+                     title = incoming.title,
+                     description = incoming.description,
+                     tip = incoming.tip,
+                     difficulty = incoming.difficulty;
+
+set
+    @leap_exercise_id = (
+        select id from exercises
+        where source = 'Exercism' and external_id = 'exercism-leap-001'
+    );
+
+set
+    @armstrong_numbers_exercise_id = (
+        select id from exercises
+        where source = 'Exercism' and external_id = 'exercism-armstrong-numbers-001'
+    );
+
+set
+    @pangram_exercise_id = (
+        select id from exercises
+        where source = 'Exercism' and external_id = 'exercism-pangram-001'
+    );
+
+set
+    @grains_exercise_id = (
+        select id from exercises
+        where source = 'Exercism' and external_id = 'exercism-grains-001'
+    );
+
+set
+    @kindergarten_garden_exercise_id = (
+        select id from exercises
+        where source = 'Exercism' and external_id = 'exercism-kindergarten-garden-001'
+    );
+
+insert into
+    exercise_skills (exercise_id, skill_id)
+values
+    (@leap_exercise_id, @control_flow_skill_id),
+    (@leap_exercise_id, @methods_skill_id),
+    (@armstrong_numbers_exercise_id, @control_flow_skill_id),
+    (@armstrong_numbers_exercise_id, @methods_skill_id),
+    (@pangram_exercise_id, @strings_skill_id),
+    (@pangram_exercise_id, @methods_skill_id),
+    (@grains_exercise_id, @variables_skill_id),
+    (@grains_exercise_id, @control_flow_skill_id),
+    (@grains_exercise_id, @methods_skill_id),
+    (@kindergarten_garden_exercise_id, @arrays_skill_id),
+    (@kindergarten_garden_exercise_id, @strings_skill_id),
+    (@kindergarten_garden_exercise_id, @methods_skill_id) as incoming
+on duplicate key update
+    skill_id = incoming.skill_id;
+
+update exercises
+set tip = case external_id
+    when 'java-variables-001' then 'Declare age before the print statement, and make sure the variable is an int with the requested value.'
+    when 'exercism-lasagna-001' then 'Treat each method as a small calculation. Separate oven time from preparation time before combining them.'
+    when 'exercism-annalyns-infiltration-001' then 'Write down the boolean condition for each action in plain language before translating it into Java.'
+    when 'exercism-blackjack-001' then 'Parse the special card values first, then handle the decision rules in the order they are described.'
+    when 'exercism-cars-assemble-001' then 'Calculate the hourly rate first, then convert it to a per-minute rate using the same production factor.'
+    when 'exercism-salary-calculator-001' then 'Solve each policy as its own ternary expression before applying the salary cap.'
+    when 'exercism-bird-watcher-001' then 'Use the array indexes deliberately: the last day is the final element, while a first-days count is a length.'
+    when 'exercism-log-levels-001' then 'Split the line at the colon, trim the message, and remove the brackets from the level before lowercasing it.'
+    when 'exercism-two-fer-001' then 'Check for a missing or empty name before building the greeting.'
+    when 'exercism-difference-of-squares-001' then 'Compute the two requested totals independently, then subtract them in the required order.'
+    when 'exercism-resistor-color-001' then 'The color list is already ordered; the index of a color is its numeric code.'
+    when 'exercism-high-scores-001' then 'Keep the original list unchanged when selecting the top three scores.'
+    when 'exercism-secret-handshake-001' then 'Check each bit independently, add actions in normal order, and reverse only when the highest flag is set.'
+    else tip
+end
+where source in ('CodeCalibrate', 'Exercism');

@@ -80,6 +80,7 @@ public class ExerciseIntegrationTest {
             "test-exercise-" + testId,
             "Print an Age Variable",
             "Declare an int variable named age, assign it the value 25, and print it.",
+            "Start by declaring the variable before you print it.",
             "Beginner",
             "CodeCalibrate");
 
@@ -141,6 +142,7 @@ public class ExerciseIntegrationTest {
         .andExpect(jsonPath("$.externalId").value(exercise.getExternalId()))
         .andExpect(jsonPath("$.title").value("Print an Age Variable"))
         .andExpect(jsonPath("$.difficulty").value("Beginner"))
+        .andExpect(jsonPath("$.tip").value("Start by declaring the variable before you print it."))
         .andExpect(jsonPath("$.skills[0].name").value(skillName))
         .andExpect(jsonPath("$.expectedAnswer").doesNotExist())
         .andExpect(jsonPath("$.starterCode").value(containsString("public class Main")))

@@ -109,6 +109,12 @@ function ExercisePage({ authSession, onLogout }) {
         <>
           <section className="exercise-instructions">
             <p>{exercise.description}</p>
+            {exercise.tip && (
+              <details className="exercise-tip">
+                <summary>Need a tip?</summary>
+                <p>{exercise.tip}</p>
+              </details>
+            )}
             <p>
               <strong>Difficulty:</strong> {exercise.difficulty}
             </p>

@@ -7,6 +7,7 @@ public record ExerciseResponse(
     String externalId,
     String title,
     String description,
+    String tip,
     String difficulty,
     String source,
     String starterCode,

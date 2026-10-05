@@ -12,6 +12,24 @@
   background: var(--theme-surface);
 }
 
+.exercise-tip {
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--theme-warning-border);
+  border-radius: 0.5rem;
+  color: var(--theme-warning-foreground);
+  background: var(--theme-warning-surface);
+}
+
+.exercise-tip summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.exercise-tip p {
+  margin: 0.75rem 0 0;
+}
+
 .editor-section {
   display: grid;
   gap: 0.75rem;

@@ -34,6 +34,9 @@ public class Exercise {
     @Column(columnDefinition = "text")
     private String description;
 
+    @Column(columnDefinition = "text")
+    private String tip;
+
     @Column(length = 32)
     private String difficulty;
 
@@ -61,9 +64,21 @@ public class Exercise {
             String difficulty,
             String source
     ) {
+        this(externalId, title, description, null, difficulty, source);
+    }
+
+    public Exercise(
+            String externalId,
+            String title,
+            String description,
+            String tip,
+            String difficulty,
+            String source
+    ) {
         this.externalId = externalId;
         this.title = title;
         this.description = description;
+        this.tip = tip;
         this.difficulty = difficulty;
         this.source = source;
     }
@@ -91,6 +106,10 @@ public class Exercise {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getTip() {
+        return tip;
     }
 
     public String getDifficulty() {

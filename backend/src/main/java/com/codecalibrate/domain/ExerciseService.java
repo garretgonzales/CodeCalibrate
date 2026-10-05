@@ -65,6 +65,7 @@ public class ExerciseService {
         exercise.getExternalId(),
         exercise.getTitle(),
         exercise.getDescription(),
+        exercise.getTip(),
         exercise.getDifficulty(),
         exercise.getSource(),
         contentDefinition.starterCode(),

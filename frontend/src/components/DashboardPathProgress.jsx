@@ -73,32 +73,37 @@ function DashboardPathProgress({ paths }) {
                 </div>
 
                 <ul className="mt-5 grid gap-3">
-                  {path.skills.map((skill) => (
-                    <li
-                      key={skill.skillId}
-                      className="flex items-center justify-between gap-4 text-sm">
-                      <div>
-                        <p className="font-semibold text-ink-950">
-                          {skill.name}
-                        </p>
+                  {path.skills.map((skill) => {
+                    const skillProgress = calculateProgress(
+                      skill.completedExercises,
+                      skill.totalExercises,
+                    );
 
-                        <p className="mt-1 text-ink-500">
-                          <AnimatedNumber value={skill.completedExercises} />
-                          {" of "}
-                          <AnimatedNumber value={skill.totalExercises} />
-                          {" exercises"}
-                        </p>
-                      </div>
+                    return (
+                      <li
+                        key={skill.skillId}
+                        className="flex items-center justify-between gap-4 text-sm">
+                        <div>
+                          <p className="font-semibold text-ink-950">
+                            {skill.name}
+                          </p>
 
-                      <p className="text-ink-700">
-                        <AnimatedNumber
-                          value={skill.masteryScore}
-                          decimals={2}
-                          suffix="%"
-                        />
-                      </p>
-                    </li>
-                  ))}
+                          <p className="mt-1 text-ink-500">
+                            <AnimatedNumber value={skill.completedExercises} />
+                            {" of "}
+                            <AnimatedNumber value={skill.totalExercises} />
+                            {" exercises"}
+                          </p>
+                        </div>
+
+                        <p
+                          className="text-ink-700"
+                          aria-label={`${skill.name} completion`}>
+                          <AnimatedNumber value={skillProgress} suffix="%" />
+                        </p>
+                      </li>
+                    );
+                  })}
                 </ul>
               </article>
             );
